@@ -103,89 +103,263 @@ function renderPublications(publications) {
 
     publications.reverse();
 
-    if (!publications || publications.length === 0) {
+    if (!publications.length) {
         container.innerHTML = "<p class='text-center text-gray-500'>No hay publicaciones disponibles.</p>";
         return;
     }
 
+    console.log("Publicaciones a renderizar:", publications); // Depuración para verificar datos
+
     publications.forEach((publication) => {
+        console.log("Publicación actual:", publication); // Depuración de cada publicación
+
         const card = document.createElement('div');
         card.classList.add(
             'bg-gray-900', 'rounded-lg', 'shadow-md', 'p-4', 'mb-6', 'relative',
             'flex', 'flex-col', 'items-center', 'w-full', 'max-w-lg', 'mx-auto'
         );
 
-        let currentImageIndex = 0;
-        const isUnlocked = publication.publicationType !== 'token' || publication.isUnlocked;
-
-        const imageUrl = isUnlocked
-            ? publication.mediaItems?.[currentImageIndex]?.url || '../static/media/default-placeholder.png'
-            : '../static/media/locked.png';
-
         card.innerHTML = `
-            <!-- Usuario -->
-            <div class="flex items-center w-full p-2 cursor-pointer" onclick="window.location.href='User_profile.html?userId=${publication.user?.id}'">
+            <div class="flex items-center w-full p-2 cursor-pointer">
                 <img src="${publication.user?.profile?.profileImage || '../static/media/default-avatar.png'}" class="w-12 h-12 rounded-full border-2 border-yellow-400">
                 <div class="ml-3">
                     <p class="text-yellow-400 font-semibold">${publication.user?.profile?.stageName || 'Usuario'}</p>
                     <p class="text-gray-500 text-sm">${new Date(publication.publicationDate).toLocaleDateString()}</p>
                 </div>
             </div>
-
-            <!-- Imagen -->
             <div class="relative w-full">
-                <img src="${imageUrl}" class="w-full h-auto rounded-lg">
+                <img src="${publication.mediaItems?.[0]?.url || '../static/media/default-placeholder.png'}" class="w-full h-auto rounded-lg">
             </div>
-
-            <!-- Descripción -->
             <div class="mt-3 text-left w-full px-2">
                 <h3 class="text-lg font-bold text-yellow-400">${publication.title}</h3>
                 <p class="text-gray-300 mt-1">${publication.description}</p>
             </div>
-
-            <!-- Interacciones (Me gusta, Comentar, Compartir, Enviar Tokens) -->
             <div class="mt-4 flex items-center justify-between w-full px-4 text-gray-500">
-                <!-- Me gusta -->
                 <div class="relative flex items-center gap-2 like-container cursor-pointer" data-id="${publication.id}">
-                    <img src="../static/media/Icons/me-gusta.png" 
-                        alt="Me gusta" 
-                        class="w-6 h-6 like-icon">
-                    <span class="text-sm">${publication.likes || 0} Me gusta</span>
+                    <img src="../static/media/Icons/me-gusta.png" class="w-6 h-6 like-icon">
+                    <span class="text-sm" data-likes="${publication.id}">${publication.likes || 0} Me gusta</span>
                 </div>
-
-                <!-- Comentarios -->
-                <div class="relative flex items-center gap-2 cursor-pointer">
-                    <img src="../static/media/Icons/comente.png" alt="Comentar" class="w-6 h-6">
+                <div class="relative flex items-center gap-2 comment-container cursor-pointer" data-id="${publication.id}">
+                    <img src="../static/media/Icons/comente.png" class="w-6 h-6">
                     <span class="text-sm">Comentar</span>
                 </div>
-
-                <!-- Compartir -->
-                <div class="relative flex items-center gap-2 cursor-pointer">
-                    <img src="../static/media/Icons/enviar.png" alt="Compartir" class="w-6 h-6">
+                <div class="relative flex items-center gap-2 share-container cursor-pointer" data-id="${publication.id}">
+                    <img src="../static/media/Icons/enviar.png" class="w-6 h-6">
                     <span class="text-sm">Compartir</span>
                 </div>
-
-                <!-- Enviar Tokens -->
-                <div class="relative flex items-center gap-2 cursor-pointer">
-                    <img src="../static/media/Icons/signo-de-dolar.png" alt="Enviar Tokens" class="w-6 h-6">
-                </div>
+            </div>
+            <div class="w-full mt-3 px-2 hidden comment-section" data-comments="${publication.id}">
+                <input type="text" placeholder="Escribe un comentario..." class="w-full p-2 rounded bg-gray-800 text-white" data-comment-input="${publication.id}">
+                <button class="mt-2 px-4 py-1 bg-yellow-400 text-gray-900 rounded" data-comment-btn="${publication.id}">Enviar</button>
+                <div class="mt-2 text-white comments-list"></div>
             </div>
         `;
 
-        // Cambiar icono de "Me gusta" al pasar el mouse
-        const likeContainer = card.querySelector('.like-container');
-        const likeIcon = likeContainer.querySelector('.like-icon');
-
-        likeContainer.addEventListener('mouseenter', () => {
-            likeIcon.src = '../static/media/Icons/corazon-hover.png'; // Cambia al icono rojo
-        });
-
-        likeContainer.addEventListener('mouseleave', () => {
-            likeIcon.src = '../static/media/Icons/me-gusta.png'; // Restaura al icono gris
-        });
+        console.log("HTML generado para publicación:", publication.id, card.innerHTML); // Verificar HTML generado
 
         container.appendChild(card);
     });
 
+    attachEventListeners();
+}
 
+//  Asignar eventos a los botones de interacción
+function attachEventListeners() {
+    document.querySelectorAll(".like-container").forEach(button => {
+        button.addEventListener("click", () => {
+            likePublication(button.getAttribute("data-id"));
+        });
+    });
+
+    document.querySelectorAll(".comment-container").forEach(button => {
+        button.addEventListener("click", () => {
+            const section = document.querySelector(`[data-comments="${button.getAttribute("data-id")}"]`);
+            section.classList.toggle("hidden");
+        });
+    });
+    document.querySelectorAll("[data-comment-btn]").forEach(button => {
+        button.addEventListener("click", () => {
+            const publicationId = button.getAttribute("data-comment-btn");
+            console.log("ID obtenido del botón de comentario:", publicationId); // Depuración
+            addComment(publicationId);
+        });
+    });
+    document.querySelectorAll(".share-container").forEach(button => {
+        button.addEventListener("click", () => {
+            const publicationId = button.getAttribute("data-id");
+            sharePublication(publicationId);
+        });
+    });
+}
+
+async function likePublication(publicationId) {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+        alert("Debes iniciar sesión para interactuar.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:9001/api/likes/${publicationId}/like`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        const data = await response.json();
+        console.log("Respuesta del backend al alternar like:", data);
+
+        if (data.success) {
+            // Actualizar el contador de "Me gusta"
+            updateLikesCount(publicationId, data.body.likes);
+        } else {
+            alert(data.message || "Error al procesar la acción.");
+        }
+    } catch (error) {
+        console.error("Error al interactuar con el backend:", error);
+    }
+}
+
+function updateLikesCount(publicationId, newLikesCount) {
+    const likesElement = document.querySelector(`[data-likes="${publicationId}"]`);
+    if (likesElement) {
+        likesElement.textContent = `${newLikesCount} Me gusta`;
+    }
+}
+
+
+
+function toggleLikeButton(publicationId, liked) {
+    const button = document.querySelector(`.like-container[data-id="${publicationId}"]`);
+    if (button) {
+        if (liked) {
+            button.classList.add("liked"); // Cambiar apariencia
+        } else {
+            button.classList.remove("liked"); // Restablecer apariencia
+        }
+        button.setAttribute("data-liked", liked); // Guardar estado
+    }
+}
+
+
+// Actualizar el contador de "Me gusta"
+function updateLikesCount(publicationId, newLikesCount) {
+    const likesElement = document.querySelector(`[data-likes="${publicationId}"]`);
+    if (likesElement) {
+        likesElement.textContent = `${newLikesCount} Me gusta`;
+    }
+}
+
+
+
+// Función para agregar un comentario
+async function addComment(publicationId) {
+    console.log("ID de la publicación recibido en addComment:", publicationId); // Depuración
+
+    const commentInput = document.querySelector(`[data-comment-input="${publicationId}"]`);
+    if (!commentInput) {
+        console.error(`No se encontró el input de comentario para la publicación con ID ${publicationId}`);
+        return;
+    }
+
+    const commentValue = commentInput.value.trim();
+    if (!commentValue) {
+        alert("El comentario no puede estar vacío.");
+        return;
+    }
+
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+        alert("Debes iniciar sesión para comentar.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:9001/api/comments/${publicationId}/comment`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ content: commentValue }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            alert("Comentario agregado.");
+            commentInput.value = "";
+            loadComments(publicationId);
+        } else {
+            console.error("Error al agregar comentario:", data.message);
+        }
+    } catch (error) {
+        console.error("Error al comentar:", error);
+    }
+}
+
+
+
+// Función para cargar comentarios
+async function loadComments(publicationId) {
+    const token = localStorage.getItem("authToken"); // Recuperar el token de autenticación
+    if (!token) {
+        console.error("No se encontró el token de autenticación. No se pueden cargar comentarios.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:9001/api/comments/${publicationId}/comments`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`, // Añadir el token al encabezado
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            console.error("Error al cargar comentarios. Código de estado:", response.status);
+            return;
+        }
+
+        const data = await response.json();
+        console.log("Comentarios obtenidos:", data);
+
+        // Manejar el caso en el que `data.body` sea `null` o esté vacío
+        if (!data.body || !Array.isArray(data.body)) {
+            console.warn("No hay comentarios disponibles para esta publicación.");
+            const container = document.querySelector(`[data-comments="${publicationId}"] .comments-list`);
+            container.innerHTML = "<p class='text-gray-500'>No hay comentarios disponibles.</p>";
+            return;
+        }
+
+        // Renderizar los comentarios
+        const container = document.querySelector(`[data-comments="${publicationId}"] .comments-list`);
+        container.innerHTML = data.body.map(comment => `<p>${comment.content}</p>`).join("");
+
+    } catch (error) {
+        console.error("Error al cargar comentarios:", error);
+    }
+}
+
+
+function sharePublication(publicationId) {
+    const shareUrl = `${window.location.origin}/publications/${publicationId}`;
+
+    if (navigator.share) {
+        // Usar la Web Share API si está disponible
+        navigator.share({
+            title: "¡Mira esta publicación!",
+            text: "Echa un vistazo a esta publicación interesante.",
+            url: shareUrl,
+        })
+        .then(() => console.log("Publicación compartida con éxito"))
+        .catch((error) => console.error("Error al compartir:", error));
+    } else {
+        // Copiar el enlace al portapapeles
+        navigator.clipboard.writeText(shareUrl)
+            .then(() => alert("Enlace copiado al portapapeles"))
+            .catch((error) => console.error("Error al copiar el enlace:", error));
+    }
 }

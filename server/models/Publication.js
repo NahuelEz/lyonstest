@@ -29,11 +29,6 @@ Publication.init(
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: DataTypes.NOW,
-            validate: {
-                isDate: {
-                    msg: "Invalid date.",
-                },
-            },
         },
     },
     {
