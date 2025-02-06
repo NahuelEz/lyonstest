@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LYONSVIP - Login</title>
+  <link rel="icon" href="../static/media/favicon.ico" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col justify-between">
+
+  <!-- Espacio superior -->
+  <div class="flex-grow"></div>
+
+  <!-- Contenedor principal centrado -->
+  <div class="flex-grow flex items-center justify-center px-4">
+    <div class="w-full max-w-md flex flex-col items-center">
+      <!-- Logo -->
+      <img src="../static/media/LYONSVIP negro.png" alt="LYONSVIP Logo" class="h-20 mb-8">
+      
+      <!-- Contenedor del formulario con fondo -->
+      <div class="w-full bg-gray-900 rounded-lg shadow-xl p-8">
+        <!-- Barra de selección -->
+        <div class="bg-gray-800 p-1 rounded-lg mb-8 flex w-full">
+          <button id="loginTab" 
+                  class="flex-1 py-2 px-4 rounded-md text-center transition-colors duration-300 bg-yellow-400 text-gray-900 font-medium">
+            Iniciar Sesión
+          </button>
+          <button id="registerTab" 
+                  class="flex-1 py-2 px-4 rounded-md text-center transition-colors duration-300 text-gray-300 hover:text-yellow-400">
+            Registrarse
+          </button>
+        </div>
+
+        <!-- Formulario de Login -->
+        <div id="loginForm" class="w-full">
+          <form class="space-y-4">
+            <div>
+              <label for="loginEmail" class="block text-gray-300 mb-2">Correo Electrónico:</label>
+              <input type="email" 
+                     id="loginEmail"
+                     class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-yellow-400"
+                     placeholder="Introduce tu correo">
+            </div>
+            <div>
+              <label for="loginPassword" class="block text-gray-300 mb-2">Contraseña:</label>
+              <input type="password" 
+                     id="loginPassword"
+                     class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-yellow-400"
+                     placeholder="Introduce tu contraseña">
+            </div>
+            <button type="submit" 
+                    class="w-full py-3 bg-yellow-400 text-gray-900 rounded-lg font-medium hover:bg-yellow-500 transition-colors duration-300">
+              Ingresar
+            </button>
+          </form>
+        </div>
+
+        <!-- Formulario de Registro -->
+        <div id="registerForm" class="hidden w-full">
+          <form class="space-y-4">
+            <div>
+              <label for="registerEmail" class="block text-gray-300 mb-2">Correo Electrónico:</label>
+              <input type="email" 
+                     id="registerEmail"
+                     class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-yellow-400"
+                     placeholder="Introduce tu correo">
+            </div>
+            <div>
+              <label for="registerPassword" class="block text-gray-300 mb-2">Contraseña:</label>
+              <input type="password" 
+                     id="registerPassword"
+                     class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-yellow-400"
+                     placeholder="Introduce tu contraseña">
+            </div>
+            <div>
+              <label for="confirmPassword" class="block text-gray-300 mb-2">Confirmar Contraseña:</label>
+              <input type="password" 
+                     id="confirmPassword"
+                     class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-yellow-400"
+                     placeholder="Repite tu contraseña">
+            </div>
+            <button type="submit" 
+                    class="w-full py-3 bg-yellow-400 text-gray-900 rounded-lg font-medium hover:bg-yellow-500 transition-colors duration-300">
+              Registrarse
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer simplificado -->
+  <footer class="py-6 text-center">
+    <p class="text-gray-600 text-sm">© 2024 LYONSVIP ENTERPRISE LTD.</p>
+  </footer>
+
+  <div id="notification" class="hidden fixed top-4 right-4 bg-yellow-500 text-white p-4 rounded-lg shadow-lg">
+    <span id="notification-message"></span>
+  </div>
+
+  <script src="../static/js/login.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

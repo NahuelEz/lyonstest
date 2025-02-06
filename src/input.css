@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Importar tus estilos personalizados */
+@import "../css/coming-soon-styles.css";
+@import "../css/dashboard-styles.css";
+@import "../css/profile-styles.css";
+@import "../css/styles.css";
+    

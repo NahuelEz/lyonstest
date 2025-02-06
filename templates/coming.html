@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUY PRONTO - LYONSVIP</title>
+  <link rel="icon" href="./media/lyonsvip.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Estilos generales de Tailwind -->
+  <link rel="stylesheet" href="../static/css/tailwind-output.css">
+</head>
+<body>
+
+  <!-- Marquee Bar -->
+  <div class="overflow-x-hidden bg-black">
+    <div class="py-4 animate-marquee whitespace-nowrap flex items-center">
+      <img src="../static/media/flyer1.jpg" alt="Anuncio 1" class="h-12 mx-28">
+      <img src="../static/media/flyer2.jpg" alt="Anuncio 2" class="h-12 mx-28">
+    </div>
+  </div>
+
+  <!-- Contenido principal con el video de fondo -->
+  <div class="relative w-full h-screen">
+    <!-- Video de fondo -->
+    <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="../static/media/video.mov" type="video/mp4">
+      Tu navegador no soporta la reproducción de videos.
+    </video>
+    <!-- Overlay oscuro -->
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+
+    <!-- Contenido superpuesto -->
+    <div class="relative z-10 flex flex-col justify-center items-center h-full text-center px-4">
+      <img src="../static/media/LYONSVIP negro.png" alt="LYONSVIP Logo" class="w-48 lg:w-64">
+      <h1 class="text-yellow-400 font-bold text-6xl lg:text-9xl mt-6">
+        ¡Muy Pronto!
+      </h1>
+      <p class="text-white text-lg lg:text-2xl mt-4">
+        Estamos trabajando para traer algo increíble. <br> Mantente atento.
+      </p>
+      <a href="https://www.instagram.com/lyonsvip" target="_blank" rel="noopener noreferrer">
+        <button type="button" class="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-lg lg:text-xl px-10 py-4 mt-8 text-center">
+          Notificarme
+        </button>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

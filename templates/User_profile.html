@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Panel - LYONSVIP</title>
+  <link rel="icon" href="../static/media/favicon.ico" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/profile-styles.css">
+</head>
+<body class="bg-gray-900 text-gray-100">
+
+
+<!-- Navbar -->
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-gray-900 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center p-4 max-w-screen-xl">
+        <img src="../static/media/LYONSVIP negro.png" alt="LYONSVIP Logo" class="h-16">
+        <nav class="flex space-x-6">
+            <a href="index.html" class="text-gray-300 hover:text-yellow-400 transition duration-300">INICIO</a>
+            <a href="profile.html" id="user-link" class="text-gray-300 hover:text-yellow-400 transition duration-300">MI CUENTA</a>
+            <a href="tokens.html" class="text-gray-300 hover:text-yellow-400 transition duration-300">TOKENS</a>
+        </nav>
+        <div class="flex items-center space-x-4">
+            <button id="menu-toggle" class="text-gray-300 hover:text-yellow-400 md:hidden">☰</button>
+            <div id="token-display" class="flex items-center space-x-2 bg-gray-800 p-2 rounded-lg shadow-lg transition duration-300 hover:bg-gray-700">
+                <img src="../static/media/Icons/signo-de-dolaryellow.png" alt="Tokens" class="w-6 h-6">
+                <span class="text-gray-300 font-medium">Tokens: <span id="token-count" class="font-bold text-yellow-400">500</span></span>
+            </div>
+            <div class="relative">
+                <button id="avatar-menu-toggle" class="flex items-center space-x-2 bg-gray-800 p-2 rounded-lg shadow-lg transition duration-300 hover:bg-gray-700">
+                    <img src="../static/media/usuario.png" alt="Avatar" class="w-6 h-6 rounded-full">
+                </button>
+                <div id="avatar-menu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 shadow-lg rounded-lg">
+                    <a href="#" id="logout" class="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-yellow-400 transition duration-300">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </header>
+
+<!-- Contenido del Perfil -->
+<main class="min-h-screen p-6">
+  <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg p-6">
+    <div class="flex flex-col items-center">
+      <img src="../static/media/usuario.png" alt="Foto de Perfil" class="w-32 h-32 rounded-full border-4 border-yellow-400 object-cover mb-4">
+      <h1 class="text-2xl font-bold text-yellow-400">MI PANEL</h1>
+      <p id="username" class="text-gray-300"><span class="font-semibold"></span></p>
+      <div class="mt-4 space-y-2">
+        <button id="change-email-btn" class="w-full px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg">CAMBIAR CORREO</button>
+        <button id="change-password-btn" class="w-full px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg">CAMBIAR CONTRASEÑA</button>
+      </div>
+      <div class="mt-6 text-gray-400">
+        <p id="email">Correo: <span class="text-gray-300"></span></p>
+        <p id="creation-date"><span class="text-gray-300"></span></p>
+      </div>
+            <!-- Formulario para cambiar correo -->
+            <div id="change-email-form" class="hidden mt-4 w-full">
+              <h2 class="text-lg font-bold text-yellow-400">Actualizar Correo</h2>
+              <input type="email" id="new-email" placeholder="Nuevo correo" class="mt-2 px-4 py-2 rounded-lg w-full">
+              <button id="submit-email" class="mt-2 w-full px-4 py-2 bg-yellow-400 text-black rounded-lg">Actualizar Correo</button>
+            </div>
+      
+            <!-- Formulario para cambiar contraseña -->
+            <div id="change-password-form" class="hidden mt-4 w-full">
+              <h2 class="text-lg font-bold text-yellow-400">Actualizar Contraseña</h2>
+              <input type="password" id="new-password" placeholder="Nueva contraseña" class="mt-2 px-4 py-2 rounded-lg w-full">
+              <button id="submit-password" class="mt-2 w-full px-4 py-2 bg-yellow-400 text-black rounded-lg">Actualizar Contraseña</button>
+            </div>
+    </div>
+  </div>
+</main>
+
+
+<!-- Footer -->
+<footer class="bg-[#1a1a1a] border-t border-gray-800 py-8">
+    <div class="container mx-auto">
+        <p class="text-gray-500 text-sm mb-4">© 2024 LYONSVIP ENTERPRISE LTD.</p>
+    </div>
+</footer>
+
+<script>
+  document.getElementById('avatar-menu-toggle').addEventListener('click', function () {
+      const menu = document.getElementById('avatar-menu');
+      if (menu.classList.contains('hidden')) {
+          menu.classList.remove('hidden');
+      } else {
+          menu.classList.add('hidden');
+      }
+  });
+
+  document.addEventListener('click', function (e) {
+      const avatarMenu = document.getElementById('avatar-menu');
+      const toggleButton = document.getElementById('avatar-menu-toggle');
+      if (!toggleButton.contains(e.target) && !avatarMenu.contains(e.target)) {
+          avatarMenu.classList.add('hidden');
+      }
+  });
+
+  document.getElementById('logout').addEventListener('click', function () {
+      // Eliminar el token de autenticación
+      localStorage.removeItem('authToken');
+      // Redirigir a la página de inicio de sesión
+      window.location.href = 'login.html';
+  });
+</script>
+<script src="../static/js/user_profile.js"></script>
+<script src="../static/js/index.js"></script>
+</body>
+</html>

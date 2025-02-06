@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LYONSVIP - Página</title>
+  <link rel="icon" href="./media/favicon.ico" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/profile-styles.css">
+</head>
+<body class="bg-[#1a1a1a] text-white">
+
+<!-- Navbar -->
+<header class="sticky top-0 z-50 bg-[#1a1a1a]">
+  <div class="container mx-auto flex justify-between items-center p-4">
+    <img src="./media/LYONSVIP negro.png" alt="LYONSVIP Logo" class="h-16">
+    <nav class="hidden md:flex space-x-6">
+      <a href="index.html" class="text-gray-300 hover:text-primary font-medium">INICIO</a>
+      <a href="profile.html" class="text-gray-300 hover:text-primary font-medium">MI CUENTA</a>
+      <a href="tokens.html" class="text-gray-300 hover:text-primary font-medium">TOKENS</a>
+    </nav>
+    <div class="flex items-center space-x-4">
+      <input type="text" placeholder="Buscar..." class="hidden md:block px-4 py-2 bg-gray-800 border-gray-600 text-white">
+      <div class="space-x-2 hidden md:flex">
+        <button class="text-primary hover:text-white">🌐</button>
+        <button class="text-primary hover:text-white">👤</button>
+        <button class="text-primary hover:text-white">🇪🇸</button>
+      </div>
+      <button id="menu-toggle" class="text-primary hover:text-white md:hidden">☰</button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden bg-[#1a1a1a] md:hidden">
+    <nav class="flex flex-col space-y-4 py-4 px-4">
+      <a href="index.html" class="text-gray-300 hover:text-primary">INICIO</a>
+      <a href="tokens.html" class="text-gray-300 hover:text-primary">MI CUENTA</a>
+      <a href="profile.html" class="text-gray-300 hover:text-primary">TOKENS</a>
+      <input type="text" placeholder="Buscar..." class="px-4 py-2 bg-gray-800 border-gray-600 text-white mt-2">
+    </nav>
+  </div>
+</header>
+
+<!-- Contenido Principal -->
+<main class="container mx-auto py-8">
+  <div class="bg-[#2c2c2c] shadow-lg rounded-lg p-6">
+    <!-- Información del usuario -->
+    <div class="flex items-center space-x-6">
+      <img src="https://via.placeholder.com/150" alt="Foto de perfil" class="rounded-full border-4 border-primary w-24 h-24">
+      <div>
+        <h2 class="text-2xl font-semibold text-white">Mi Panel</h2>
+        <p class="text-gray-300">Nombre de usuario: <span class="font-bold text-primary">monicafarro</span></p>
+        <p class="text-gray-300">Miembro desde: <span class="font-bold">3/1/2024</span></p>
+        <p class="text-gray-300">Correo: <span class="font-bold">mfarro28@gmail.com</span></p>
+      </div>
+    </div>
+
+    <!-- Opciones de configuración -->
+    <div class="grid grid-cols-2 gap-6 mt-8">
+      <button class="bg-primary text-black py-2 px-4 rounded-full font-semibold hover:bg-yellow-500">Cambiar Nombre de Usuario</button>
+      <button class="bg-primary text-black py-2 px-4 rounded-full font-semibold hover:bg-yellow-500">Cambiar Contraseña</button>
+      <button class="bg-gray-800 text-white py-2 px-4 rounded-full font-semibold hover:bg-gray-600">Notificaciones</button>
+      <button class="bg-gray-800 text-white py-2 px-4 rounded-full font-semibold hover:bg-gray-600">Reclamos</button>
+    </div>
+
+    <!-- Opciones de compras -->
+    <h3 class="mt-10 mb-4 text-xl font-semibold text-primary">Mis Compras</h3>
+    <div class="grid grid-cols-2 gap-6">
+      <button class="bg-gray-800 text-white py-2 px-4 rounded-full font-semibold hover:bg-gray-600">DivasTV</button>
+      <button class="bg-gray-800 text-white py-2 px-4 rounded-full font-semibold hover:bg-gray-600">Comprar Tokens</button>
+      <button class="bg-gray-800 text-white py-2 px-4 rounded-full font-semibold hover:bg-gray-600">Historial Tokens</button>
+      <button id="open-transactions-modal" class="bg-gray-800 text-white py-2 px-4 rounded-full font-semibold hover:bg-gray-600">Pagos</button>
+      <button class="bg-gray-800 text-white py-2 px-4 rounded-full font-semibold hover:bg-gray-600">Suscripciones Activas</button>
+      <button class="bg-primary text-black py-2 px-4 rounded-full font-semibold hover:bg-yellow-500">Reclamos</button>
+    </div>
+
+    <!-- Botón de volver -->
+    <div class="mt-8 text-center">
+      <button class="bg-primary text-black py-2 px-6 rounded-full font-semibold hover:bg-yellow-500">Volver</button>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="text-center py-8">
+  <div class="container mx-auto">
+    <div class="mb-6 bg-gradient-to-r from-[#1a1a1a] to-gray-900 p-4 rounded-lg">
+      <h2 class="text-3xl font-bold text-primary">Quiero ser parte de LYONSVIP</h2>
+      <button class="mt-4 px-6 py-2 bg-primary text-white rounded-full">MÁS INFO</button>
+    </div>
+    <div class="flex justify-center items-center space-x-6 mb-4">
+      <img src="./media/100x50.png" alt="Verified by Visa" class="h-8">
+      <img src="./media/100x50.png" alt="MasterCard SecureCode" class="h-8">
+    </div>
+    <p class="text-gray-500 text-sm mb-4">© 2024 LYONSVIP ENTERPRISE LTD.</p>
+    <div class="flex justify-center space-x-4 text-sm text-gray-400">
+      <a href="#" class="hover-primary">¿Necesitas soporte?</a>
+      <a href="#" class="hover-primary">Preguntas frecuentes</a>
+      <a href="#" class="hover-primary">Condiciones de servicio</a>
+      <a href="#" class="hover-primary">Política de privacidad</a>
+      <a href="#" class="hover-primary">Denuncias</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Modal Pagos-->
+<div id="transactions-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+  <div class="bg-[#2c2c2c] rounded-lg shadow-lg w-3/4 max-h-screen overflow-y-auto p-6 relative">
+    <h2 class="text-xl font-semibold text-primary mb-4">Historial de Tokens</h2>
+    <button id="close-modal" class="absolute top-4 right-4 text-white hover:text-gray-500">&times;</button>
+    <table class="w-full text-left text-white border-collapse">
+      <thead>
+        <tr>
+          <th class="border-b-2 border-gray-600 p-2">Fecha</th>
+          <th class="border-b-2 border-gray-600 p-2">Tokens</th>
+          <th class="border-b-2 border-gray-600 p-2">Monto</th>
+          <th class="border-b-2 border-gray-600 p-2">Método de Pago</th>
+        </tr>
+      </thead>
+      <tbody id="transactions-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  document.getElementById("open-transactions-modal").addEventListener("click", () => {
+    document.getElementById("transactions-modal").classList.remove("hidden");
+    fetchTransactions();
+  });
+
+  document.getElementById("close-modal").addEventListener("click", () => {
+    document.getElementById("transactions-modal").classList.add("hidden");
+  });
+
+  async function fetchTransactions() {
+    const response = await fetch('/api/transactions');
+    const transactions = await response.json();
+
+    const tableBody = document.getElementById("transactions-table");
+    tableBody.innerHTML = "";
+
+    transactions.forEach((transaction) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td class="p-2 border-b border-gray-600">${new Date(transaction.transaction_date).toLocaleString()}</td>
+        <td class="p-2 border-b border-gray-600">${transaction.tokens_added}</td>
+        <td class="p-2 border-b border-gray-600">$${transaction.amount}</td>
+        <td class="p-2 border-b border-gray-600">${transaction.payment_method}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
+</script>
+
+</body>
+</html>

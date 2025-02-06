@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Perfil</title>
+    <script src="../static/js/create_profile.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-6">
+    <div class="max-w-2xl mx-auto">
+        <!-- Logo y Header -->
+        <div class="text-center mb-8">
+            <img src="../static/media/LYONSVIP negro.png" 
+                 alt="LYONSVIP Logo" 
+                 class="h-20 mx-auto mb-6"
+            />
+            <h2 class="text-2xl font-bold text-yellow-400">Crear Perfil</h2>
+            <p class="text-gray-400">Complete la información de su perfil de creador</p>
+        </div>
+
+        <!-- Formulario -->
+        <form id="createProfileForm" class="space-y-6" enctype="multipart/form-data">
+            <!-- Información Personal -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">Información Personal</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" name="firstName" placeholder="Nombre" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    <input type="text" name="lastName" placeholder="Apellido" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    
+                    <select name="sex" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required>
+                        <option value="">Seleccione sexo</option>
+                        <option value="m">Masculino</option>
+                        <option value="f">Femenino</option>
+                        <option value="o">Otro</option>
+                    </select>
+                    
+                    <input type="date" name="birthday" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                </div>
+            </div>
+
+            <!-- Documentación -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">Documentación</h3>
+                <div class="space-y-4">
+                    <input type="text" name="document" placeholder="Número de Documento" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    <input type="text" name="nationality" placeholder="Nacionalidad" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    <input type="text" name="residenceCountry" placeholder="País de Residencia" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    <input type="text" name="residenceCity" placeholder="Ciudad de Residencia" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                </div>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">Información de Contacto</h3>
+                <div class="space-y-4">
+                    <input type="text" name="phone" placeholder="Teléfono" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    <input type="text" name="instagram" placeholder="Instagram (opcional)" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" />
+                </div>
+            </div>
+
+            <!-- Información del Perfil -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">Información del Perfil</h3>
+                <div class="space-y-4">
+                    <input type="text" name="publicUserName" placeholder="Nombre Público" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    <input type="text" name="stageName" placeholder="Nombre Artístico" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    <input type="number" name="basicSubscriptionCost" placeholder="Costo de Suscripción Básico" 
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required />
+                    <input type="hidden" name="timezone" value="GMT-3" />
+                </div>
+            </div>
+
+            <!-- Documentos Requeridos -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">Documentos Requeridos</h3>
+                <div class="space-y-4">
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Documento Frontal</label>
+                        <input type="file" name="frontDocumentFile" accept="image/*" 
+                               class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-400 file:text-gray-900 hover:file:bg-yellow-500" required />
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Documento Trasero</label>
+                        <input type="file" name="backDocumentFile" accept="image/*" 
+                               class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-400 file:text-gray-900 hover:file:bg-yellow-500" required />
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Video Documento</label>
+                        <input type="file" name="videoDocumentFile" accept="video/*" 
+                               class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-400 file:text-gray-900 hover:file:bg-yellow-500" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Imágenes Opcionales -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">Imágenes del Perfil (Opcionales)</h3>
+                <div class="space-y-4">
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Imagen de Perfil</label>
+                        <input type="file" name="profileImageFile" accept="image/*" 
+                               class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-400 file:text-gray-900 hover:file:bg-yellow-500" />
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Imagen de Póster</label>
+                        <input type="file" name="posterImageFile" accept="image/*" 
+                               class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-400 file:text-gray-900 hover:file:bg-yellow-500" />
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Imagen de Banner</label>
+                        <input type="file" name="bannerImageFile" accept="image/*" 
+                               class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-400 file:text-gray-900 hover:file:bg-yellow-500" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón de envío -->
+            <button type="submit" 
+                    class="w-full py-3 px-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition duration-200 ease-in-out transform hover:scale-105">
+                Crear Perfil
+            </button>
+        </form>
+    </div>
+
+    
+</body>
+</html>
