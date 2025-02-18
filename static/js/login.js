@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             icon: 'success',
             confirmButtonText: 'Aceptar'
           }).then(() => {
-            window.location.href = "/";
+            window.location.href = "http://localhost:9001/";
           });
         } else {
           alert("Error al obtener el rol del usuario.");
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (data.success) {
         alert("¡Registro exitoso! Inicia sesión ahora.");
-        window.location.href = "/login";
+        window.location.href = "http://localhost:9001/login";
       } else {
         alert(data.message || "Error en el registro");
       }
