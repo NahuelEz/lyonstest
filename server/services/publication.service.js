@@ -20,7 +20,7 @@ class PublicationService {
                         {
                             model: Profile,
                             as: 'profile',
-                            attributes: ['publicUserName', 'stageName', 'profileImage'],
+                            attributes: ['userId', 'publicUserName', 'stageName', 'profileImage'],
                         },
                     ],
                 },
