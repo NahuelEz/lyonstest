@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         console.log('Profile data:', profile);
                         const userId = item.id;
                         console.log('Clicking profile with userId:', userId);
-                        window.location.href = `/templates/profile.html?userId=${userId}`;
+                        window.location.href = `/profile.html?userId=${userId}`;
                     };
 
                     const img = document.createElement("img");
