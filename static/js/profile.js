@@ -6,48 +6,54 @@ document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('authToken') || localStorage.getItem('access_token');
     console.log('3. Token:', token ? 'Encontrado' : 'No encontrado');
 
+    if (!token) {
+        alert('Por favor, inicia sesión para ver perfiles.');
+        window.location.href = '/templates/login.html';
+        return;
+    }
+
     const API_URL = 'http://localhost:9001';
     
     try {
-        const userResponse = await fetch(`${API_URL}/api/users/me`, {
+        // Get userId from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+        
+        if (!userId) {
+            console.error('No userId provided in URL');
+            return;
+        }
+
+        console.log('Loading profile for userId:', userId);
+
+        // Fetch user profile by userId
+        const profileResponse = await fetch(`${API_URL}/api/profiles/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
-        const userData = await userResponse.json();
-        console.log('User Data:', userData);
+        const profileData = await profileResponse.json();
+        if (profileData.success) {
+            console.log('Perfil cargado:', profileData.body);
+            renderProfile(profileData.body);
+            renderStats(profileData.body);
+            updateSubscribeButton(profileData.body);
 
-        if (userData.success) {
-            const userId = userData.body.id;
-            console.log('User ID:', userId);
-
-            const profileResponse = await fetch(`${API_URL}/api/profiles`, {
+            // Load user's publications
+            const publicationsResponse = await fetch(`${API_URL}/api/users/${userId}/publications`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
 
-            const profileData = await profileResponse.json();
-            if (profileData.success) {
-                console.log('Perfil cargado:', profileData.body);
-                renderProfile(profileData.body);
-                renderStats(profileData.body);
-                updateSubscribeButton(profileData.body);
-
-                // Cargar publicaciones con el ID del usuario actual
-                const publicationsResponse = await fetch(`${API_URL}/api/users/${userId}/publications`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                const publicationsData = await publicationsResponse.json();
-                if (publicationsData.success) {
-                    renderPublications(publicationsData.body);
-                    document.querySelector('[data-stat="publications"]').textContent = publicationsData.body.length;
-                }
+            const publicationsData = await publicationsResponse.json();
+            if (publicationsData.success) {
+                renderPublications(publicationsData.body);
+                document.querySelector('[data-stat="publications"]').textContent = publicationsData.body.length;
             }
+        } else {
+            console.error('Error loading profile:', profileData.message);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -128,7 +134,6 @@ function renderStats(profile) {
                     <span class="text-white font-semibold" data-stat="followers">${profile.followersCount || 0}</span>
                 </div>
                 <div class="flex justify-between">
-
                     <span class="text-gray-400">Me gusta</span>
                     <span class="text-white font-semibold" data-stat="likes">${profile.likesCount || 0}</span>
                 </div>
@@ -295,5 +300,3 @@ function updateSubscribeButton(profile) {
         console.log('No se encontró el botón de suscripción');
     }
 }
-
-

@@ -6,8 +6,11 @@ import upload from '../middlewares/multer.js';
 
 const profileRouter = Router();
 
-// Solo el owner puede editar, obtener o actualizar su perfil. El userId lo sacamos del req.userId
+// Get logged in user's profile
 profileRouter.get('/', ProfileController.getProfile);
+
+// Get profile by userId
+profileRouter.get('/:userId', ProfileController.getProfileById);
 
 profileRouter.post('/create',
     upload.fields([

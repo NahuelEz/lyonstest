@@ -5,7 +5,11 @@ class ProfileService {
 
     getProfile = async (userId) => {
         const profile = await Profile.findOne({
-            where: { userId }
+            where: { userId },
+            include: [{
+                model: User,
+                attributes: ['id', 'email', 'role']
+            }]
         });
         if (!profile) throw new Error("Profile not found");
         return profile;
