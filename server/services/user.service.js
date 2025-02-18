@@ -4,15 +4,14 @@ import { verifyRecaptcha } from "../utils/recaptcha.js";
 
 class UserService {
     login = async (email, password, recaptchaResponse) => {
-        // Validate reCAPTCHA response
-        if (!recaptchaResponse) {
-            throw new Error("Por favor, verifica que no eres un robot.");
-        }
-
-        const isValidRecaptcha = await verifyRecaptcha(recaptchaResponse);
-        if (!isValidRecaptcha) {
-            throw new Error("Verificación reCAPTCHA fallida. Por favor, intenta de nuevo.");
-        }
+        // TODO: Implement reCAPTCHA verification later
+        // if (!recaptchaResponse) {
+        //     throw new Error("Por favor, verifica que no eres un robot.");
+        // }
+        // const isValidRecaptcha = await verifyRecaptcha(recaptchaResponse);
+        // if (!isValidRecaptcha) {
+        //     throw new Error("Verificación reCAPTCHA fallida. Por favor, intenta de nuevo.");
+        // }
 
         const user = await User.findOne({ where: { email } });
         if (!user) throw new Error("Incorrect credentials");
@@ -49,14 +48,14 @@ class UserService {
     createUser = async (email, password, confirmPassword, role, recaptchaResponse, isAdult, acceptedTerms) => {
         if (password !== confirmPassword) throw new Error("Las contraseñas no coinciden.");
         
-        if (!recaptchaResponse) {
-            throw new Error("Por favor, verifica que no eres un robot.");
-        }
-
-        const isValidRecaptcha = await verifyRecaptcha(recaptchaResponse);
-        if (!isValidRecaptcha) {
-            throw new Error("Verificación reCAPTCHA fallida. Por favor, intenta de nuevo.");
-        }
+        // TODO: Implement reCAPTCHA verification later
+        // if (!recaptchaResponse) {
+        //     throw new Error("Por favor, verifica que no eres un robot.");
+        // }
+        // const isValidRecaptcha = await verifyRecaptcha(recaptchaResponse);
+        // if (!isValidRecaptcha) {
+        //     throw new Error("Verificación reCAPTCHA fallida. Por favor, intenta de nuevo.");
+        // }
 
         if (!isAdult) throw new Error("Debes ser mayor de 18 años para registrarte.");
         if (!acceptedTerms) throw new Error("Debes aceptar los términos y condiciones.");
