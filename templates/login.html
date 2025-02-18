@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/static/css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col justify-between">
 
@@ -54,6 +55,8 @@
                      placeholder="Introduce tu contraseña"
                      autocomplete="current-password">
             </div>
+            <div class="g-recaptcha mb-4" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+            
             <button type="submit" 
                     class="w-full py-3 bg-yellow-400 text-gray-900 rounded-lg font-medium hover:bg-yellow-500 transition-colors duration-300">
               Ingresar
@@ -88,6 +91,24 @@
                      placeholder="Repite tu contraseña"
                      autocomplete="new-password">
             </div>
+            <div class="space-y-3 mb-4">
+              <div class="flex items-center">
+                <input type="checkbox" id="ageCheck" class="w-4 h-4 text-yellow-400 bg-gray-800 border-gray-700 rounded focus:ring-yellow-400">
+                <label for="ageCheck" class="ml-2 text-sm text-gray-300">
+                  Confirmo que soy mayor de 18 años
+                </label>
+              </div>
+              
+              <div class="flex items-center">
+                <input type="checkbox" id="termsCheck" class="w-4 h-4 text-yellow-400 bg-gray-800 border-gray-700 rounded focus:ring-yellow-400">
+                <label for="termsCheck" class="ml-2 text-sm text-gray-300">
+                  Acepto los <a href="#" class="text-yellow-400 hover:underline">términos y condiciones</a>
+                </label>
+              </div>
+            </div>
+
+            <div class="g-recaptcha mb-4" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+            
             <button type="submit" 
                     class="w-full py-3 bg-yellow-400 text-gray-900 rounded-lg font-medium hover:bg-yellow-500 transition-colors duration-300">
               Registrarse

@@ -4,6 +4,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("loginForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Por favor, verifica que no eres un robot.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
     const emailInput = document.getElementById("loginEmail");
     const passwordInput = document.getElementById("loginPassword");
     const email = emailInput.value.trim();
@@ -15,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, recaptchaResponse }),
       });
 
       const data = await response.json();
@@ -41,19 +52,68 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "http://localhost:9001/";
           });
         } else {
-          alert("Error al obtener el rol del usuario.");
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Error al obtener el rol del usuario.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
         }
       } else {
-        alert(data.message || "Error al iniciar sesión");
+        Swal.fire({
+          title: '¡Error!',
+          text: data.message || 'Error al iniciar sesión',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
       }
     } catch (error) {
       console.error("Error en login:", error);
-      alert("Error de conexión con el servidor");
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Error de conexión con el servidor',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
     }
   });
 
   document.getElementById("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Por favor, verifica que no eres un robot.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    const ageCheck = document.getElementById("ageCheck").checked;
+    const termsCheck = document.getElementById("termsCheck").checked;
+
+    if (!ageCheck) {
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Debes confirmar que eres mayor de 18 años.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    if (!termsCheck) {
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Debes aceptar los términos y condiciones.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
 
     const email = document.getElementById("registerEmail").value.trim();
     const password = document.getElementById("registerPassword").value.trim();
@@ -61,7 +121,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const role = "user";
 
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden.");
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Las contraseñas no coinciden.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
       return;
     }
 
@@ -71,20 +136,44 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, confirmPassword, role }),
+        body: JSON.stringify({ 
+          email, 
+          password, 
+          confirmPassword, 
+          role,
+          recaptchaResponse,
+          isAdult: ageCheck,
+          acceptedTerms: termsCheck
+        }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        alert("¡Registro exitoso! Inicia sesión ahora.");
-        window.location.href = "http://localhost:9001/login";
+        Swal.fire({
+          title: '¡Registro exitoso!',
+          text: 'Por favor, inicia sesión.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        }).then(() => {
+          window.location.href = "http://localhost:9001/login";
+        });
       } else {
-        alert(data.message || "Error en el registro");
+        Swal.fire({
+          title: '¡Error!',
+          text: data.message || 'Error en el registro',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
       }
     } catch (error) {
       console.error("Error en registro:", error);
-      alert("Error de conexión con el servidor");
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Error de conexión con el servidor',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
     }
   });
 
@@ -100,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
     registerTab.classList.add('text-gray-300');
     loginForm.classList.remove('hidden');
     registerForm.classList.add('hidden');
+    grecaptcha.reset();
   });
 
   registerTab.addEventListener('click', () => {
@@ -109,22 +199,22 @@ document.addEventListener("DOMContentLoaded", () => {
     loginTab.classList.add('text-gray-300');
     registerForm.classList.remove('hidden');
     loginForm.classList.add('hidden');
+    grecaptcha.reset();
   });
 });
 
 function showNotification(message) {
-    const notification = document.getElementById('notification');
-    const notificationMessage = document.getElementById('notification-message');
-    
-    notificationMessage.textContent = message;
-    notification.classList.remove('hidden');
-    notification.style.opacity = 1;
+  const notification = document.getElementById('notification');
+  const notificationMessage = document.getElementById('notification-message');
+  
+  notificationMessage.textContent = message;
+  notification.classList.remove('hidden');
+  notification.style.opacity = 1;
 
-    // Ocultar la notificación después de 3 segundos
+  setTimeout(() => {
+    notification.style.opacity = 0;
     setTimeout(() => {
-        notification.style.opacity = 0;
-        setTimeout(() => {
-            notification.classList.add('hidden');
-        }, 500);
-    }, 3000);
+      notification.classList.add('hidden');
+    }, 500);
+  }, 3000);
 }

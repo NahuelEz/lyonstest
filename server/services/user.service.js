@@ -2,7 +2,12 @@ import { BillingInfo, Profile, Subscription, User } from "../models/index.js";
 import { generateToken } from "../utils/auth.js";
 
 class UserService {
-    login = async (email, password) => {
+    login = async (email, password, recaptchaResponse) => {
+        // Validate reCAPTCHA response
+        if (!recaptchaResponse) {
+            throw new Error("Por favor, verifica que no eres un robot.");
+        }
+
         const user = await User.findOne({ where: { email } });
         if (!user) throw new Error("Incorrect credentials");
 
@@ -35,8 +40,13 @@ class UserService {
         return user;
     };
 
-    createUser = async (email, password, confirmPassword, role) => {
+    createUser = async (email, password, confirmPassword, role, recaptchaResponse, isAdult, acceptedTerms) => {
         if (password !== confirmPassword) throw new Error("Passwords do not match.");
+        
+        // Here you would validate the reCAPTCHA response and the other checks
+        if (!isAdult) throw new Error("User must be 18 years or older.");
+        if (!acceptedTerms) throw new Error("User must accept the terms and conditions.");
+
         const user = await User.create({ email, password, role });
         if (!user) throw new Error("Error creating the user.");
         return { id: user.id, email, role };

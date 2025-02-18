@@ -4,9 +4,8 @@ import billingInfoService from "../services/billingInfo.service.js";
 class UserController {
   login = async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const token = await userService.login(email, password);
-      // res.cookie("token", token);
+      const { email, password, recaptchaResponse } = req.body;
+      const token = await userService.login(email, password, recaptchaResponse);
       res.status(200).send({ success: true, message: null, body: { token } });
     } catch (error) {
       res.status(401).send({ success: false, message: error.message, body: null });
@@ -42,8 +41,26 @@ class UserController {
 
   createUser = async (req, res) => {
     try {
-      const { email, password, confirmPassword, role } = req.body;
-      const user = await userService.createUser(email, password, confirmPassword, role);
+      const { 
+        email, 
+        password, 
+        confirmPassword, 
+        role, 
+        recaptchaResponse, 
+        isAdult, 
+        acceptedTerms 
+      } = req.body;
+
+      const user = await userService.createUser(
+        email, 
+        password, 
+        confirmPassword, 
+        role, 
+        recaptchaResponse, 
+        isAdult, 
+        acceptedTerms
+      );
+      
       res.status(201).send({ success: true, message: null, body: user });
     } catch (error) {
       res.status(400).send({ success: false, message: error.message, body: null });
