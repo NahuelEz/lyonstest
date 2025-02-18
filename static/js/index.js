@@ -372,9 +372,9 @@ document.getElementById('user-link').addEventListener('click', async (event) => 
             if (userData.success) {
                 const userId = userData.body.id; // Obtener el ID del usuario
                 if (userData.body.role === 'model') {
-                    window.location.href = `/profile.html?userId=${userId}`;
+                    window.location.href = `/model_dashboard.html`;
                 } else if (userData.body.role === 'user') {
-                    window.location.href = `/User_profile.html?userId=${userId}`;
+                    window.location.href = `/User_profile.html`;
                 } else {
                     alert('No tienes permiso para acceder a esta sección.');
                 }
