@@ -351,7 +351,44 @@ async function addComment(publicationId) {
     }
 }
 
+// Add click event for "Mi cuenta" link
+document.getElementById('user-link').addEventListener('click', async (event) => {
+    event.preventDefault();
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        try {
+            const userResponse = await fetch('http://localhost:9001/api/users/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (!userResponse.ok) {
+                throw new Error('Error al obtener los datos del usuario');
+            }
 
+            const userData = await userResponse.json();
+            
+            if (userData.success) {
+                const userId = userData.body.id; // Obtener el ID del usuario
+                if (userData.body.role === 'model') {
+                    window.location.href = `/profile.html?userId=${userId}`;
+                } else if (userData.body.role === 'user') {
+                    window.location.href = `/User_profile.html?userId=${userId}`;
+                } else {
+                    alert('No tienes permiso para acceder a esta sección.');
+                }
+            } else {
+                alert('No se pudo obtener la información del usuario.');
+            }
+        } catch (error) {
+            console.error('Error en la autenticación:', error);
+            alert('Hubo un error al procesar la solicitud.');
+        }
+    } else {
+        window.location.href = '/templates/login.html';
+    }
+});
 
 // Función para cargar comentarios
 async function loadComments(publicationId) {
