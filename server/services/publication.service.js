@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Publication, User, Profile, MediaItem, UnlockedContent, Subscription, Like } from "../models/index.js"; // Importar Like
+import { Publication, User, Profile, MediaItem, UnlockedContent, Subscription, Like, Comment } from "../models/index.js"; // Importar Like y Comment
 import connection from "../connection/connection.js";
 
 class PublicationService {
@@ -24,6 +24,21 @@ class PublicationService {
                         },
                     ],
                 },
+                {
+                    model: Comment,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ['id'],
+                            include: [
+                                {
+                                    model: Profile,
+                                    attributes: ['profileImage', 'stageName'],
+                                }
+                            ]
+                        }
+                    ]
+                }
             ],
         });
 
@@ -120,11 +135,28 @@ class PublicationService {
     getPublicationById = async (id) => {
         const publication = await Publication.findOne({
             where: { id },
-            include: [{
-                model: MediaItem,
-                as: 'mediaItems',
-                attributes: ['id', 'url', 'publicationId'],
-            }],
+            include: [
+                {
+                    model: MediaItem,
+                    as: 'mediaItems',
+                    attributes: ['id', 'url', 'publicationId'],
+                },
+                {
+                    model: Comment,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ['id'],
+                            include: [
+                                {
+                                    model: Profile,
+                                    attributes: ['profileImage', 'stageName'],
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
         });
 
         if (!publication) throw new Error("Publication not found.");

@@ -178,10 +178,12 @@ function renderPublications(publications) {
                     <span class="text-sm">Compartir</span>
                 </div>
             </div>
-            <div class="w-full mt-3 px-2 hidden comment-section" data-comments="${publication.id}">
+            <div class="w-full mt-3 px-2 comment-section" data-comments="${publication.id}">
                 <input type="text" placeholder="Escribe un comentario..." class="w-full p-2 rounded bg-gray-800 text-white" data-comment-input="${publication.id}">
                 <button class="mt-2 px-4 py-1 bg-yellow-400 text-gray-900 rounded" data-comment-btn="${publication.id}">Enviar</button>
-                <div class="mt-2 text-white comments-list"></div>
+                <div class="mt-2 text-white comments-list">
+                    ${renderComments(publication.Comments || [])}
+                </div>
             </div>
         `;
 
@@ -207,10 +209,6 @@ function attachEventListeners() {
             const publicationId = button.getAttribute("data-id");
             const section = document.querySelector(`[data-comments="${publicationId}"]`);
             section.classList.toggle("hidden");
-    
-            if (!section.classList.contains("hidden")) {
-                await loadComments(publicationId);
-            }
         });
     });
     document.querySelectorAll("[data-comment-btn]").forEach(button => {
@@ -328,9 +326,33 @@ async function addComment(publicationId) {
 
         const data = await response.json();
         if (data.success) {
-            alert("Comentario agregado.");
-            commentInput.value = "";
-            loadComments(publicationId);
+            // Obtener información del usuario actual
+            const userResponse = await fetch('http://localhost:9001/api/users/me', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const userData = await userResponse.json();
+
+            if (userData.success) {
+                const commentsContainer = document.querySelector(`[data-comments="${publicationId}"] .comments-list`);
+                const noCommentsMessage = commentsContainer.querySelector('.text-gray-400');
+                if (noCommentsMessage) {
+                    commentsContainer.innerHTML = ''; // Eliminar mensaje de "no hay comentarios"
+                }
+
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('comment-item', 'mb-2', 'p-2', 'rounded', 'bg-gray-800');
+                commentElement.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <img src="${userData.body.profile?.profileImage || '../static/media/default-avatar.png'}" 
+                             class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-yellow-400 font-semibold">${userData.body.profile?.stageName || "Usuario"}</span>
+                    </div>
+                    <p class="text-gray-300">${commentValue}</p>
+                `;
+
+                commentsContainer.appendChild(commentElement);
+                commentInput.value = "";
+            }
         } else {
             console.error("Error al agregar comentario:", data.message);
         }
@@ -388,6 +410,24 @@ async function loadComments(publicationId) {
 }
 
 
+
+// Función para renderizar los comentarios
+function renderComments(comments) {
+    if (!comments || comments.length === 0) {
+        return "<p class='text-gray-400 text-sm'>No hay comentarios aún.</p>";
+    }
+
+    return comments.map(comment => `
+        <div class="comment-item mb-2 p-2 rounded bg-gray-800">
+            <div class="flex items-center mb-2">
+                <img src="${comment.User?.Profile?.profileImage || '../static/media/default-avatar.png'}" 
+                     class="w-8 h-8 rounded-full">
+                <span class="ml-2 text-yellow-400 font-semibold">${comment.User?.Profile?.stageName || "Usuario"}</span>
+            </div>
+            <p class="text-gray-300">${comment.content}</p>
+        </div>
+    `).join('');
+}
 
 function sharePublication(publicationId) {
     const shareUrl = `${window.location.origin}/publications/${publicationId}`;
