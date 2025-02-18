@@ -145,10 +145,13 @@ function renderPublications(publications) {
         );
 
         card.innerHTML = `
-            <div class="flex items-center w-full p-2 cursor-pointer" onclick="window.location.href='/profile.html?userId=${publication.user?.id}'">
-                <img src="${publication.user?.profile?.profileImage || '../static/media/default-avatar.png'}" class="w-12 h-12 rounded-full border-2 border-yellow-400">
+            <div class="flex items-center w-full p-2">
+                <img src="${publication.user?.profile?.profileImage || '../static/media/default-avatar.png'}" 
+                     class="w-12 h-12 rounded-full border-2 border-yellow-400 cursor-pointer" 
+                     onclick="window.location.href='/templates/profile.html?userId=${publication.user?.id}'">
                 <div class="ml-3">
-                    <p class="text-yellow-400 font-semibold">${publication.user?.profile?.stageName || 'Usuario'}</p>
+                    <p class="text-yellow-400 font-semibold cursor-pointer" 
+                       onclick="window.location.href='/templates/profile.html?userId=${publication.user?.id}'">${publication.user?.profile?.stageName || 'Usuario'}</p>
                     <p class="text-gray-500 text-sm">${new Date(publication.publicationDate).toLocaleDateString()}</p>
                 </div>
             </div>

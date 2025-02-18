@@ -4,8 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("loginForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
+    const emailInput = document.getElementById("loginEmail");
+    const passwordInput = document.getElementById("loginPassword");
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
     try {
       const response = await fetch(`${apiBaseUrl}/users/login`, {
@@ -31,8 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const userData = await userResponse.json();
         if (userData.success) {
           localStorage.setItem("userRole", userData.body.role);
-          showNotification("¡Login exitoso!");
-          window.location.href = "/templates/index.html";
+          Swal.fire({
+            title: '¡Login exitoso!',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          }).then(() => {
+            window.location.href = "/";
+          });
         } else {
           alert("Error al obtener el rol del usuario.");
         }
@@ -71,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (data.success) {
         alert("¡Registro exitoso! Inicia sesión ahora.");
-        window.location.href = "/login.html";
+        window.location.href = "/login";
       } else {
         alert(data.message || "Error en el registro");
       }
@@ -121,10 +128,3 @@ function showNotification(message) {
         }, 500);
     }, 3000);
 }
-
-// Ejemplo de uso
-Swal.fire({
-    title: '¡Login exitoso!',
-    icon: 'success',
-    confirmButtonText: 'Aceptar'
-});

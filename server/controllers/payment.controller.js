@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { createPaymentIntent } from "../services/stripeService.js";
-import Payment from "../models/payment.js";
+import Payment from "../models/Payment.js";
 import UserService from "../services/user.service.js";
 import Transaction from "../models/Transaction.js";
 import { sendEmail } from "../services/mailService.js";

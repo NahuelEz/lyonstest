@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../connection/connection.js";
 import User from "./User.js"; // Modelo de usuarios
-import Payment from "./payment.js";
+import Payment from "./Payment.js";
 
 const Transaction = sequelize.define("Transaction", {
   id: {
