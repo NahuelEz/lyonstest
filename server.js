@@ -44,6 +44,7 @@ app.get("/dashboard", (req, res) => res.sendFile(path.join(templatesPath, "dashb
 app.get("/publish", (req, res) => res.sendFile(path.join(templatesPath, "cargar.html")));
 app.get("/coming", (req, res) => res.sendFile(path.join(templatesPath, "coming.html")));
 app.get("/profile", (req, res) => res.sendFile(path.join(templatesPath, "profile.html")));
+app.get("/model-dashboard", (req, res) => res.sendFile(path.join(templatesPath, "model_dashboard.html")));
 
 // API routes
 app.use("/api", validateUser, router);
