@@ -295,3 +295,5 @@ function updateSubscribeButton(profile) {
         console.log('No se encontró el botón de suscripción');
     }
 }
+
+

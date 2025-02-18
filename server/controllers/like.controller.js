@@ -2,7 +2,6 @@ import Like from "../models/Like.js";
 import Publication from "../models/Publication.js";
 
 class LikeController {
-    // Alternar Like
     likePublication = async (req, res) => {
         try {
             const { id: publicationId } = req.params; // ID de la publicación
@@ -21,7 +20,7 @@ class LikeController {
             const existingLike = await Like.findOne({ where: { userId, publicationId } });
 
             if (existingLike) {
-                // Si ya dio "like", eliminarlo (quitar "Me gusta")
+                // Si ya dio "like", eliminarlo
                 await Like.destroy({ where: { userId, publicationId } });
 
                 // Contar los "likes" restantes
@@ -34,7 +33,7 @@ class LikeController {
                 });
             }
 
-            // Si no dio "like", agregarlo (dar "Me gusta")
+            // Si no existe un "like", agregarlo
             await Like.create({ userId, publicationId });
 
             // Contar los "likes" actualizados

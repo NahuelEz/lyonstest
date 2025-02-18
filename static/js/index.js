@@ -9,21 +9,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function fetchPublications() {
     try {
         const token = localStorage.getItem('authToken');
-        console.log('Token:', token);
         if (!token) {
             alert('Por favor, inicia sesión para ver publicaciones.');
             window.location.href = "/templates/login.html";
             return;
         }
 
-        console.log("Obteniendo publicaciones...");
-
+        //Obtener publicaciones
         const response = await fetch('http://localhost:9001/api/public/publications', {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            }
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
         });
 
         if (!response.ok) {
@@ -31,14 +26,34 @@ async function fetchPublications() {
             return;
         }
 
-        const data = await response.json();
-        console.log("Publicaciones obtenidas:", data.body);
+        let publications = await response.json();
+        publications = publications.body;
 
-        if (data.success && Array.isArray(data.body)) {
-            renderPublications(data.body);
-        } else {
-            console.error('Error obteniendo publicaciones:', data.message);
-        }
+        renderPublications(publications);
+        publications.forEach(async (publication) => {
+            try {
+                const token = localStorage.getItem("authToken");
+                const likesResponse = await fetch(`http://localhost:9001/api/likes/${publication.id}/count`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+        
+                const likesData = await likesResponse.json();
+        
+                if (likesResponse.ok && likesData.success) {
+                    updateLikesCount(publication.id, likesData.body.likes);
+                } else {
+                    console.error(`Error al obtener likes para publicación ${publication.id}:`, likesData.message);
+                }
+            } catch (error) {
+                console.error(`Error al obtener likes para publicación ${publication.id}:`, error);
+            }
+        });
+        
+
     } catch (error) {
         console.error('Error al conectar con el backend:', error);
     }
@@ -58,15 +73,20 @@ async function updateUserLink() {
         const userData = await response.json();
         console.log('User Data:', userData);
         if (userData.success) {
-            const userRole = userData.body.role; // Obtener el rol del usuario
+            const userRole = userData.body.role;
             console.log('User Role:', userRole);
             const userLink = document.getElementById('user-link');
+            const creatorPanelContainer = document.getElementById('creator-panel-container');
 
-            // Cambiar el href según el rol
             if (userRole === 'user') {
-                userLink.href = 'User_profile.html'; // Cambiar a User_profile.html
+                userLink.href = 'User_profile.html';
             } else if (userRole === 'model') {
-                userLink.href = 'profile.html'; // Mantener en profile.html
+                userLink.href = 'profile.html';
+                const creatorButton = document.createElement('a');
+                creatorButton.href = 'cargar.html';
+                creatorButton.textContent = 'MI PANEL';
+                creatorButton.classList.add('text-gray-300', 'hover:text-yellow-400', 'transition', 'duration-300', 'ml-4'); // Estilos para el botón
+                creatorPanelContainer.appendChild(creatorButton);
             }
         }
     } catch (error) {
@@ -108,10 +128,15 @@ function renderPublications(publications) {
         return;
     }
 
-    console.log("Publicaciones a renderizar:", publications); // Depuración para verificar datos
+    console.log("Publicaciones a renderizar:", publications);
 
     publications.forEach((publication) => {
-        console.log("Publicación actual:", publication); // Depuración de cada publicación
+        console.log("Publicación actual:", publication);
+
+        const isLiked = publication.isLiked;
+        const likeIconSrc = isLiked
+            ? "../static/media/Icons/corazon-hover.png"
+            : "../static/media/Icons/me-gusta.png"; 
 
         const card = document.createElement('div');
         card.classList.add(
@@ -120,7 +145,7 @@ function renderPublications(publications) {
         );
 
         card.innerHTML = `
-            <div class="flex items-center w-full p-2 cursor-pointer">
+            <div class="flex items-center w-full p-2 cursor-pointer" onclick="window.location.href='/profile.html?userId=${publication.user?.id}'">
                 <img src="${publication.user?.profile?.profileImage || '../static/media/default-avatar.png'}" class="w-12 h-12 rounded-full border-2 border-yellow-400">
                 <div class="ml-3">
                     <p class="text-yellow-400 font-semibold">${publication.user?.profile?.stageName || 'Usuario'}</p>
@@ -135,8 +160,10 @@ function renderPublications(publications) {
                 <p class="text-gray-300 mt-1">${publication.description}</p>
             </div>
             <div class="mt-4 flex items-center justify-between w-full px-4 text-gray-500">
-                <div class="relative flex items-center gap-2 like-container cursor-pointer" data-id="${publication.id}">
-                    <img src="../static/media/Icons/me-gusta.png" class="w-6 h-6 like-icon">
+                <div class="relative flex items-center gap-2 like-container cursor-pointer" 
+                     data-id="${publication.id}" 
+                     data-liked="${isLiked}">
+                    <img src="${likeIconSrc}" class="w-6 h-6 like-icon">
                     <span class="text-sm" data-likes="${publication.id}">${publication.likes || 0} Me gusta</span>
                 </div>
                 <div class="relative flex items-center gap-2 comment-container cursor-pointer" data-id="${publication.id}">
@@ -155,7 +182,7 @@ function renderPublications(publications) {
             </div>
         `;
 
-        console.log("HTML generado para publicación:", publication.id, card.innerHTML); // Verificar HTML generado
+        console.log("HTML generado para publicación:", publication.id, card.innerHTML);
 
         container.appendChild(card);
     });
@@ -163,7 +190,8 @@ function renderPublications(publications) {
     attachEventListeners();
 }
 
-//  Asignar eventos a los botones de interacción
+
+// Asignar eventos a los botones de interacción
 function attachEventListeners() {
     document.querySelectorAll(".like-container").forEach(button => {
         button.addEventListener("click", () => {
@@ -172,15 +200,20 @@ function attachEventListeners() {
     });
 
     document.querySelectorAll(".comment-container").forEach(button => {
-        button.addEventListener("click", () => {
-            const section = document.querySelector(`[data-comments="${button.getAttribute("data-id")}"]`);
+        button.addEventListener("click", async () => {
+            const publicationId = button.getAttribute("data-id");
+            const section = document.querySelector(`[data-comments="${publicationId}"]`);
             section.classList.toggle("hidden");
+    
+            if (!section.classList.contains("hidden")) {
+                await loadComments(publicationId);
+            }
         });
     });
     document.querySelectorAll("[data-comment-btn]").forEach(button => {
         button.addEventListener("click", () => {
             const publicationId = button.getAttribute("data-comment-btn");
-            console.log("ID obtenido del botón de comentario:", publicationId); // Depuración
+            console.log("ID obtenido del botón de comentario:", publicationId);
             addComment(publicationId);
         });
     });
@@ -199,6 +232,8 @@ async function likePublication(publicationId) {
         return;
     }
 
+    const button = document.querySelector(`.like-container[data-id="${publicationId}"]`);
+
     try {
         const response = await fetch(`http://localhost:9001/api/likes/${publicationId}/like`, {
             method: "POST",
@@ -212,8 +247,11 @@ async function likePublication(publicationId) {
         console.log("Respuesta del backend al alternar like:", data);
 
         if (data.success) {
-            // Actualizar el contador de "Me gusta"
             updateLikesCount(publicationId, data.body.likes);
+
+            const isLiked = button.getAttribute("data-liked") === "true";
+            button.setAttribute("data-liked", !isLiked);
+            button.classList.toggle("liked");
         } else {
             alert(data.message || "Error al procesar la acción.");
         }
@@ -222,12 +260,13 @@ async function likePublication(publicationId) {
     }
 }
 
-function updateLikesCount(publicationId, newLikesCount) {
+function updateLikesCount(publicationId, likes) {
     const likesElement = document.querySelector(`[data-likes="${publicationId}"]`);
     if (likesElement) {
-        likesElement.textContent = `${newLikesCount} Me gusta`;
+        likesElement.textContent = `${likes} Me gusta`;
     }
 }
+
 
 
 
@@ -235,16 +274,16 @@ function toggleLikeButton(publicationId, liked) {
     const button = document.querySelector(`.like-container[data-id="${publicationId}"]`);
     if (button) {
         if (liked) {
-            button.classList.add("liked"); // Cambiar apariencia
+            button.classList.add("liked");
         } else {
-            button.classList.remove("liked"); // Restablecer apariencia
+            button.classList.remove("liked");
         }
-        button.setAttribute("data-liked", liked); // Guardar estado
+        button.setAttribute("data-liked", liked);
     }
 }
 
 
-// Actualizar el contador de "Me gusta"
+// Actualizar el contador de Me gusta
 function updateLikesCount(publicationId, newLikesCount) {
     const likesElement = document.querySelector(`[data-likes="${publicationId}"]`);
     if (likesElement) {
@@ -256,8 +295,6 @@ function updateLikesCount(publicationId, newLikesCount) {
 
 // Función para agregar un comentario
 async function addComment(publicationId) {
-    console.log("ID de la publicación recibido en addComment:", publicationId); // Depuración
-
     const commentInput = document.querySelector(`[data-comment-input="${publicationId}"]`);
     if (!commentInput) {
         console.error(`No se encontró el input de comentario para la publicación con ID ${publicationId}`);
@@ -303,52 +340,56 @@ async function addComment(publicationId) {
 
 // Función para cargar comentarios
 async function loadComments(publicationId) {
-    const token = localStorage.getItem("authToken"); // Recuperar el token de autenticación
+    const token = localStorage.getItem("authToken");
     if (!token) {
-        console.error("No se encontró el token de autenticación. No se pueden cargar comentarios.");
+        alert("Debes iniciar sesión para ver los comentarios.");
         return;
     }
 
     try {
         const response = await fetch(`http://localhost:9001/api/comments/${publicationId}/comments`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`, // Añadir el token al encabezado
-                "Content-Type": "application/json"
-            }
+            headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!response.ok) {
-            console.error("Error al cargar comentarios. Código de estado:", response.status);
-            return;
-        }
-
         const data = await response.json();
-        console.log("Comentarios obtenidos:", data);
+        if (data.success) {
+            const commentsContainer = document.querySelector(`[data-comments="${publicationId}"] .comments-list`);
+            commentsContainer.innerHTML = ""; // Limpia comentarios previos
 
-        // Manejar el caso en el que `data.body` sea `null` o esté vacío
-        if (!data.body || !Array.isArray(data.body)) {
-            console.warn("No hay comentarios disponibles para esta publicación.");
-            const container = document.querySelector(`[data-comments="${publicationId}"] .comments-list`);
-            container.innerHTML = "<p class='text-gray-500'>No hay comentarios disponibles.</p>";
-            return;
+            if (data.body.length === 0) {
+                commentsContainer.innerHTML = "<p class='text-gray-400 text-sm'>No hay comentarios aún.</p>";
+                return;
+            }
+
+            data.body.forEach((comment) => {
+                const commentElement = document.createElement("div");
+                commentElement.classList.add("comment-item", "mb-2", "p-2", "rounded", "bg-gray-800");
+
+                commentElement.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <img src="${comment.user?.profileImage || '../static/media/default-avatar.png'}" 
+                             class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-yellow-400 font-semibold">${comment.user?.username || "Usuario"}</span>
+                    </div>
+                    <p class="text-gray-300">${comment.content}</p>
+                `;
+
+                commentsContainer.appendChild(commentElement);
+            });
+        } else {
+            console.error("Error al cargar comentarios:", data.message);
         }
-
-        // Renderizar los comentarios
-        const container = document.querySelector(`[data-comments="${publicationId}"] .comments-list`);
-        container.innerHTML = data.body.map(comment => `<p>${comment.content}</p>`).join("");
-
     } catch (error) {
-        console.error("Error al cargar comentarios:", error);
+        console.error("Error al conectar con el backend para cargar comentarios:", error);
     }
 }
+
 
 
 function sharePublication(publicationId) {
     const shareUrl = `${window.location.origin}/publications/${publicationId}`;
 
     if (navigator.share) {
-        // Usar la Web Share API si está disponible
         navigator.share({
             title: "¡Mira esta publicación!",
             text: "Echa un vistazo a esta publicación interesante.",
@@ -357,7 +398,6 @@ function sharePublication(publicationId) {
         .then(() => console.log("Publicación compartida con éxito"))
         .catch((error) => console.error("Error al compartir:", error));
     } else {
-        // Copiar el enlace al portapapeles
         navigator.clipboard.writeText(shareUrl)
             .then(() => alert("Enlace copiado al portapapeles"))
             .catch((error) => console.error("Error al copiar el enlace:", error));

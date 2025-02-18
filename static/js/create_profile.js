@@ -40,7 +40,6 @@ try {
             }
         });
 
-        // Solo validamos las imágenes opcionales si se han seleccionado
         const optionalImageInputs = ['profileImageFile', 'posterImageFile', 'bannerImageFile'];
         optionalImageInputs.forEach(inputId => {
             const input = form.querySelector(`input[name="${inputId}"]`);
@@ -95,12 +94,12 @@ try {
                     throw new Error('No se pudo obtener la información del usuario');
                 }
 
-                const userId = userData.body.id; // Obtener el ID del usuario
+                const userId = userData.body.id;
                 console.log('ID del usuario:', userId);
 
                 // Crear FormData para enviar archivos y datos
                 const formData = new FormData(form);
-                formData.append('userId', userId); // Agregar el ID del usuario
+                formData.append('userId', userId);
 
                 console.log('Datos del formulario a enviar:');
                 for (let pair of formData.entries()) {

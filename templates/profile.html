@@ -18,12 +18,14 @@
             <a href="index.html" class="text-gray-300 hover:text-yellow-400 transition duration-300">INICIO</a>
             <a href="profile.html" id="user-link" class="text-gray-300 hover:text-yellow-400 transition duration-300">MI CUENTA</a>
             <a href="tokens.html" class="text-gray-300 hover:text-yellow-400 transition duration-300">TOKENS</a>
+            <a href="cargar.html" class="text-gray-300 hover:text-yellow-400 transition duration-300">MI PANEL</a>
+            <div id="creator-panel-container"></div>
         </nav>
         <div class="flex items-center space-x-4">
             <button id="menu-toggle" class="text-gray-300 hover:text-yellow-400 md:hidden">☰</button>
             <div id="token-display" class="flex items-center space-x-2 bg-gray-800 p-2 rounded-lg shadow-lg transition duration-300 hover:bg-gray-700">
                 <img src="../static/media/Icons/signo-de-dolaryellow.png" alt="Tokens" class="w-6 h-6">
-                <span class="text-gray-300 font-medium">Tokens: <span id="token-count" class="font-bold text-yellow-400">500</span></span>
+                <span class="text-gray-300 font-medium">Tokens: <span id="token-count" class="font-bold text-yellow-400">0</span>
             </div>
             <div class="relative">
                 <button id="avatar-menu-toggle" class="flex items-center space-x-2 bg-gray-800 p-2 rounded-lg shadow-lg transition duration-300 hover:bg-gray-700">
@@ -31,6 +33,7 @@
                 </button>
                 <div id="avatar-menu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 shadow-lg rounded-lg">
                     <a href="#" id="logout" class="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-yellow-400 transition duration-300">Cerrar Sesión</a>
+                    <a href="login.html" id="login-link" class="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-yellow-400 transition duration-300 hidden">Iniciar Sesión</a>
                 </div>
             </div>
         </div>

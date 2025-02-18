@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Manejo de cambios de correo
     document.getElementById('change-email-btn').addEventListener('click', () => {
         document.getElementById('change-email-form').classList.toggle('hidden');
-        document.getElementById('change-password-form').classList.add('hidden'); // Ocultar el formulario de contraseña
+        document.getElementById('change-password-form').classList.add('hidden');
     });
 
     document.getElementById('submit-email').addEventListener('click', async () => {
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Manejo de cambios de contraseña
     document.getElementById('change-password-btn').addEventListener('click', () => {
         document.getElementById('change-password-form').classList.toggle('hidden');
-        document.getElementById('change-email-form').classList.add('hidden'); // Ocultar el formulario de correo
+        document.getElementById('change-email-form').classList.add('hidden');
     });
 
     document.getElementById('submit-password').addEventListener('click', async () => {

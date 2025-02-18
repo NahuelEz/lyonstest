@@ -1,9 +1,8 @@
 import _ from "lodash";
-import { Publication, User, Profile, MediaItem, UnlockedContent, Subscription } from "../models/index.js";
+import { Publication, User, Profile, MediaItem, UnlockedContent, Subscription, Like } from "../models/index.js"; // Importar Like
 import connection from "../connection/connection.js";
 
 class PublicationService {
-
     getAllPublications = async (filters, currentUserId) => {
         const publications = await Publication.findAll({
             where: filters,
@@ -27,6 +26,21 @@ class PublicationService {
                 },
             ],
         });
+
+        // Si hay un usuario autenticado, determinar si ha dado "like" a cada publicación
+        if (currentUserId) {
+            const userLikes = await Like.findAll({
+                where: { userId: currentUserId },
+                attributes: ['publicationId'], // Obtener solo las publicaciones que le gustan
+            });
+
+            const likedPublications = new Set(userLikes.map((like) => like.publicationId)); // Crear un conjunto para búsquedas rápidas
+
+            // Añadir `isLiked` a cada publicación
+            publications.forEach((publication) => {
+                publication.dataValues.isLiked = likedPublications.has(publication.id); // Verificar si la publicación tiene "like"
+            });
+        }
 
         if (filters && filters.userId && currentUserId && filters.userId != currentUserId) {
             const unlockedContents = await UnlockedContent.findAll({ where: { userId: currentUserId } });
