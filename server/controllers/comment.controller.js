@@ -1,6 +1,4 @@
-import Comment from "../models/Comment.js";
-import User from "../models/User.js";
-import Profile from "../models/Profile.js";
+import { Comment, User, Profile } from "../models/index.js";
 
 class CommentController {
     // Obtener comentarios de una publicación
@@ -12,6 +10,7 @@ class CommentController {
                 include: [
                     {
                         model: User,
+                        attributes: ['id'],
                         include: [
                             {
                                 model: Profile,
@@ -22,6 +21,8 @@ class CommentController {
                 ],
                 order: [['createdAt', 'DESC']]
             });
+
+            console.log('Comments found:', JSON.stringify(comments, null, 2));
 
             res.status(200).json({ success: true, body: comments });
         } catch (error) {
