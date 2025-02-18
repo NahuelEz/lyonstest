@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LYONSVIP - Panel de Modelo</title>
+  <link rel="icon" href="/static/media/lyonsvip.ico" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/dashboard-styles.css">
+</head>
+<body class="bg-[#1a1a1a] text-white">
+
+<!-- Navbar -->
+<header class="sticky top-0 z-50 bg-[#1a1a1a] border-b border-gray-800">
+  <div class="container mx-auto flex justify-between items-center p-4">
+    <img src="/static/media/LYONSVIP negro.png" alt="LYONSVIP Logo" class="h-16">
+    <nav class="flex space-x-6">
+      <a href="/" class="text-gray-300 hover:text-yellow-400 transition-colors">INICIO</a>
+      <a href="/profile.html" class="text-gray-300 hover:text-yellow-400 transition-colors">MI PERFIL</a>
+      <a href="/cargar.html" class="text-gray-300 hover:text-yellow-400 transition-colors">SUBIR CONTENIDO</a>
+      <div class="flex items-center">
+        <span class="text-yellow-400 font-bold" id="token-count">0</span>
+        <img src="/static/media/Icons/signo-de-dolaryellow.png" alt="Tokens" class="w-6 h-6 ml-2">
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="container mx-auto py-8 px-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    
+    <!-- Estadísticas Generales -->
+    <div class="bg-gray-900 rounded-lg p-6 shadow-lg">
+      <h2 class="text-xl font-bold text-yellow-400 mb-4">Estadísticas Generales</h2>
+      <div class="space-y-4">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-400">Suscriptores Activos</span>
+          <span class="text-white font-bold" id="active-subscribers">0</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-400">Total Tokens Recibidos</span>
+          <span class="text-white font-bold" id="total-tokens">0</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-400">Contenido Desbloqueado</span>
+          <span class="text-white font-bold" id="unlocked-content">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingresos del Mes -->
+    <div class="bg-gray-900 rounded-lg p-6 shadow-lg">
+      <h2 class="text-xl font-bold text-yellow-400 mb-4">Ingresos del Mes</h2>
+      <div class="space-y-4">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-400">Suscripciones</span>
+          <span class="text-white font-bold" id="subscription-income">0</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-400">Contenido Premium</span>
+          <span class="text-white font-bold" id="premium-content-income">0</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-400">Donaciones</span>
+          <span class="text-white font-bold" id="donations-income">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Últimas Actividades -->
+    <div class="bg-gray-900 rounded-lg p-6 shadow-lg">
+      <h2 class="text-xl font-bold text-yellow-400 mb-4">Últimas Actividades</h2>
+      <div class="space-y-4" id="recent-activities">
+        <!-- Activities will be populated by JavaScript -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Suscriptores Recientes -->
+  <div class="mt-8 bg-gray-900 rounded-lg p-6 shadow-lg">
+    <h2 class="text-xl font-bold text-yellow-400 mb-4">Suscriptores Recientes</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="text-left">
+            <th class="p-4 text-gray-400">Usuario</th>
+            <th class="p-4 text-gray-400">Fecha de Suscripción</th>
+            <th class="p-4 text-gray-400">Tokens Pagados</th>
+            <th class="p-4 text-gray-400">Estado</th>
+          </tr>
+        </thead>
+        <tbody id="recent-subscribers">
+          <!-- Subscribers will be populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Contenido Desbloqueado -->
+  <div class="mt-8 bg-gray-900 rounded-lg p-6 shadow-lg">
+    <h2 class="text-xl font-bold text-yellow-400 mb-4">Contenido Más Desbloqueado</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="top-content">
+      <!-- Content will be populated by JavaScript -->
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-900 py-8">
+  <div class="container mx-auto px-4 text-center">
+    <p class="text-gray-500">© 2024 LYONSVIP ENTERPRISE LTD.</p>
+  </div>
+</footer>
+
+<script src="/static/js/model_dashboard.js"></script>
+
+</body>
+</html>

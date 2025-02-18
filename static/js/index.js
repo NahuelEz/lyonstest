@@ -84,11 +84,11 @@ async function updateUserLink() {
             if (userRole === 'user') {
                 userLink.href = 'User_profile.html';
             } else if (userRole === 'model') {
-                userLink.href = 'profile.html';
+                userLink.href = 'model_dashboard.html';  // Updated to point to the new dashboard
                 const creatorButton = document.createElement('a');
                 creatorButton.href = 'cargar.html';
                 creatorButton.textContent = 'MI PANEL';
-                creatorButton.classList.add('text-gray-300', 'hover:text-yellow-400', 'transition', 'duration-300', 'ml-4'); // Estilos para el botón
+                creatorButton.classList.add('text-gray-300', 'hover:text-yellow-400', 'transition', 'duration-300', 'ml-4');
                 creatorPanelContainer.appendChild(creatorButton);
             }
         }

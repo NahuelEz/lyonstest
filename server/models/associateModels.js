@@ -2,21 +2,54 @@ import Publication from "./Publication.js";
 import User from "./User.js";
 import Like from "./Like.js";
 import Comment from "./Comment.js";
+import UnlockedContent from "./UnlockedContent.js";
+import Profile from "./Profile.js";
+import Subscription from "./Subscription.js";
 
-// Asociar los modelos
 export const associateModels = () => {
-    // Publicación pertenece a un Usuario
-    Publication.belongsTo(User, { foreignKey: "userId" });
+    // User associations
+    User.hasOne(Profile, { foreignKey: "userId", as: "profile" });
+    User.hasMany(Publication, { foreignKey: "userId" });
+    User.hasMany(Like, { foreignKey: "userId", onDelete: "CASCADE" });
+    User.hasMany(Comment, { foreignKey: "userId", onDelete: "CASCADE" });
+    User.hasMany(UnlockedContent, { foreignKey: "userId", onDelete: "CASCADE" });
+    
+    // Subscription associations
+    User.hasMany(Subscription, { 
+        foreignKey: "creatorUserId",
+        as: "subscribers"
+    });
+    User.hasMany(Subscription, { 
+        foreignKey: "subscriberUserId",
+        as: "subscriptions"
+    });
+    Subscription.belongsTo(User, { 
+        foreignKey: "creatorUserId",
+        as: "creator"
+    });
+    Subscription.belongsTo(User, { 
+        foreignKey: "subscriberUserId",
+        as: "subscriber"
+    });
 
-    // Publicación tiene muchos Likes y Comentarios
+    // Profile associations
+    Profile.belongsTo(User, { foreignKey: "userId" });
+
+    // Publication associations
+    Publication.belongsTo(User, { foreignKey: "userId" });
     Publication.hasMany(Like, { foreignKey: "publicationId", onDelete: "CASCADE" });
     Publication.hasMany(Comment, { foreignKey: "publicationId", onDelete: "CASCADE" });
+    Publication.hasMany(UnlockedContent, { foreignKey: "publicationId", onDelete: "CASCADE" });
 
-    // Like pertenece a una Publicación y un Usuario
+    // Like associations
     Like.belongsTo(Publication, { foreignKey: "publicationId", onDelete: "CASCADE" });
     Like.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
 
-    // Comment pertenece a una Publicación y un Usuario
+    // Comment associations
     Comment.belongsTo(Publication, { foreignKey: "publicationId", onDelete: "CASCADE" });
     Comment.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
+
+    // UnlockedContent associations
+    UnlockedContent.belongsTo(Publication, { foreignKey: "publicationId", onDelete: "CASCADE" });
+    UnlockedContent.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
 };

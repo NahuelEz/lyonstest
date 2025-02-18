@@ -21,16 +21,26 @@ UnlockedContent.init(
         cost: {
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        unlockDate: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false,
+        },
+        status: {
+            type: DataTypes.ENUM('active', 'expired'),
+            defaultValue: 'active',
+            allowNull: false,
         }
     },
     {
         sequelize: connection,
         modelName: "unlockedContent",
-        timestamps: false,
+        timestamps: true,
         indexes: [
             {
                 unique: true,
-                fields: ["userId", "publicationId"], // Índice único en la combinación de userId-publicationId
+                fields: ["userId", "publicationId"],
             },
         ],
     }
