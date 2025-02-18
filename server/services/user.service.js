@@ -16,11 +16,11 @@ class UserService {
     getAllModels = async () => {
         const models = await User.findAll({
             where: { role: "model" },
-            attributes: [],
+            attributes: ['id'],
             include: [{
                 model: Profile,
                 as: 'profile',
-                attributes: ['stageName', 'publicUserName', 'profileImage', 'posterImage', 'bannerImage'],
+                attributes: ['stageName', 'publicUserName', 'profileImage', 'posterImage', 'bannerImage', 'userId'],
             }]
         })
         return models;
