@@ -28,6 +28,9 @@ async function fetchPublications() {
 
         let publications = await response.json();
         publications = publications.body;
+        
+        console.log('Publications received:', publications);
+        console.log('First publication comments:', publications[0]?.Comments);
 
         renderPublications(publications);
         publications.forEach(async (publication) => {
@@ -178,7 +181,7 @@ function renderPublications(publications) {
                     <span class="text-sm">Compartir</span>
                 </div>
             </div>
-            <div class="w-full mt-3 px-2 comment-section" data-comments="${publication.id}">
+            <div class="w-full mt-3 px-2 comment-section hidden" data-comments="${publication.id}">
                 <input type="text" placeholder="Escribe un comentario..." class="w-full p-2 rounded bg-gray-800 text-white" data-comment-input="${publication.id}">
                 <button class="mt-2 px-4 py-1 bg-yellow-400 text-gray-900 rounded" data-comment-btn="${publication.id}">Enviar</button>
                 <div class="mt-2 text-white comments-list">
@@ -208,7 +211,13 @@ function attachEventListeners() {
         button.addEventListener("click", async () => {
             const publicationId = button.getAttribute("data-id");
             const section = document.querySelector(`[data-comments="${publicationId}"]`);
+            // Toggle visibility
             section.classList.toggle("hidden");
+            
+            // If we're showing the section (it's not hidden anymore)
+            if (!section.classList.contains("hidden")) {
+                await loadComments(publicationId);
+            }
         });
     });
     document.querySelectorAll("[data-comment-btn]").forEach(button => {
@@ -392,9 +401,9 @@ async function loadComments(publicationId) {
 
                 commentElement.innerHTML = `
                     <div class="flex items-center mb-2">
-                        <img src="${comment.user?.profileImage || '../static/media/default-avatar.png'}" 
+                        <img src="${comment.User?.Profile?.profileImage || '../static/media/default-avatar.png'}" 
                              class="w-8 h-8 rounded-full">
-                        <span class="ml-2 text-yellow-400 font-semibold">${comment.user?.username || "Usuario"}</span>
+                        <span class="ml-2 text-yellow-400 font-semibold">${comment.User?.Profile?.stageName || "Usuario"}</span>
                     </div>
                     <p class="text-gray-300">${comment.content}</p>
                 `;

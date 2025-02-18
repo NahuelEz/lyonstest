@@ -4,7 +4,8 @@ import _ from "lodash";
 class PublicationController {
     getAllPublications = async (req, res) => {
         try {
-            const publications = await publicationService.getAllPublications();
+            const currentUserId = req.user ? req.user.id : null;
+            const publications = await publicationService.getAllPublications({}, currentUserId);
             res.status(200).send({ success: true, message: null, body: publications });
         } catch (error) {
             res.status(400).send({ success: false, message: error.message, body: null });
