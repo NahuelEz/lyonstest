@@ -14,15 +14,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 if (profile) {
                     const profileCard = document.createElement("div");
-                    profileCard.className = "bg-gray-900 rounded-lg p-4 text-center m-2";
+                    profileCard.className = "bg-gray-900 rounded-lg p-4 text-center m-2 cursor-pointer transform transition-transform duration-300 hover:scale-105";
+                    profileCard.onclick = () => {
+                        window.location.href = `/templates/profile.html?userId=${item.id}`;
+                    };
 
                     const img = document.createElement("img");
-                    img.src = profile.posterImage || "ruta_por_defecto.jpg";
+                    img.src = profile.posterImage || "../static/media/default-avatar.png";
                     img.alt = profile.stageName || "Nombre desconocido";
                     img.className = "w-full h-auto rounded-lg";
 
                     const name = document.createElement("p");
-                    name.className = "text-white mt-2";
+                    name.className = "text-yellow-400 font-semibold mt-2";
                     name.textContent = profile.stageName || "Nombre desconocido";
 
                     profileCard.appendChild(img);
