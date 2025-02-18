@@ -1,11 +1,17 @@
 import { BillingInfo, Profile, Subscription, User } from "../models/index.js";
 import { generateToken } from "../utils/auth.js";
+import { verifyRecaptcha } from "../utils/recaptcha.js";
 
 class UserService {
     login = async (email, password, recaptchaResponse) => {
         // Validate reCAPTCHA response
         if (!recaptchaResponse) {
             throw new Error("Por favor, verifica que no eres un robot.");
+        }
+
+        const isValidRecaptcha = await verifyRecaptcha(recaptchaResponse);
+        if (!isValidRecaptcha) {
+            throw new Error("Verificación reCAPTCHA fallida. Por favor, intenta de nuevo.");
         }
 
         const user = await User.findOne({ where: { email } });
@@ -41,11 +47,19 @@ class UserService {
     };
 
     createUser = async (email, password, confirmPassword, role, recaptchaResponse, isAdult, acceptedTerms) => {
-        if (password !== confirmPassword) throw new Error("Passwords do not match.");
+        if (password !== confirmPassword) throw new Error("Las contraseñas no coinciden.");
         
-        // Here you would validate the reCAPTCHA response and the other checks
-        if (!isAdult) throw new Error("User must be 18 years or older.");
-        if (!acceptedTerms) throw new Error("User must accept the terms and conditions.");
+        if (!recaptchaResponse) {
+            throw new Error("Por favor, verifica que no eres un robot.");
+        }
+
+        const isValidRecaptcha = await verifyRecaptcha(recaptchaResponse);
+        if (!isValidRecaptcha) {
+            throw new Error("Verificación reCAPTCHA fallida. Por favor, intenta de nuevo.");
+        }
+
+        if (!isAdult) throw new Error("Debes ser mayor de 18 años para registrarte.");
+        if (!acceptedTerms) throw new Error("Debes aceptar los términos y condiciones.");
 
         const user = await User.create({ email, password, role });
         if (!user) throw new Error("Error creating the user.");
