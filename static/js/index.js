@@ -324,6 +324,7 @@ async function addComment(publicationId) {
     }
 
     try {
+        console.log('Enviando comentario:', { publicationId, content: commentValue });
         const response = await fetch(`http://localhost:9001/api/comments/${publicationId}/comment`, {
             method: "POST",
             headers: {
@@ -334,39 +335,19 @@ async function addComment(publicationId) {
         });
 
         const data = await response.json();
+        console.log('Respuesta al agregar comentario:', data);
+
         if (data.success) {
-            // Obtener información del usuario actual
-            const userResponse = await fetch('http://localhost:9001/api/users/me', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const userData = await userResponse.json();
-
-            if (userData.success) {
-                const commentsContainer = document.querySelector(`[data-comments="${publicationId}"] .comments-list`);
-                const noCommentsMessage = commentsContainer.querySelector('.text-gray-400');
-                if (noCommentsMessage) {
-                    commentsContainer.innerHTML = ''; // Eliminar mensaje de "no hay comentarios"
-                }
-
-                const commentElement = document.createElement('div');
-                commentElement.classList.add('comment-item', 'mb-2', 'p-2', 'rounded', 'bg-gray-800');
-                commentElement.innerHTML = `
-                    <div class="flex items-center mb-2">
-                        <img src="${userData.body.profile?.profileImage || '../static/media/default-avatar.png'}" 
-                             class="w-8 h-8 rounded-full">
-                        <span class="ml-2 text-yellow-400 font-semibold">${userData.body.profile?.stageName || "Usuario"}</span>
-                    </div>
-                    <p class="text-gray-300">${commentValue}</p>
-                `;
-
-                commentsContainer.appendChild(commentElement);
-                commentInput.value = "";
-            }
+            // Después de agregar el comentario, recargamos todos los comentarios
+            await loadComments(publicationId);
+            commentInput.value = ""; // Limpiar el input
         } else {
             console.error("Error al agregar comentario:", data.message);
+            alert("Error al agregar el comentario. Por favor, intenta de nuevo.");
         }
     } catch (error) {
         console.error("Error al comentar:", error);
+        alert("Error al agregar el comentario. Por favor, intenta de nuevo.");
     }
 }
 
@@ -381,31 +362,40 @@ async function loadComments(publicationId) {
     }
 
     try {
+        console.log('Cargando comentarios para publicación:', publicationId);
         const response = await fetch(`http://localhost:9001/api/comments/${publicationId}/comments`, {
             headers: { Authorization: `Bearer ${token}` },
         });
 
         const data = await response.json();
+        console.log('Respuesta de comentarios:', data);
+        
         if (data.success) {
             const commentsContainer = document.querySelector(`[data-comments="${publicationId}"] .comments-list`);
             commentsContainer.innerHTML = ""; // Limpia comentarios previos
 
-            if (data.body.length === 0) {
+            if (!data.body || data.body.length === 0) {
                 commentsContainer.innerHTML = "<p class='text-gray-400 text-sm'>No hay comentarios aún.</p>";
                 return;
             }
 
             data.body.forEach((comment) => {
+                console.log('Procesando comentario:', comment);
                 const commentElement = document.createElement("div");
                 commentElement.classList.add("comment-item", "mb-2", "p-2", "rounded", "bg-gray-800");
 
+                const userProfile = comment.User?.Profile;
+                const profileImage = userProfile?.profileImage || '../static/media/default-avatar.png';
+                const userName = userProfile?.stageName || "Usuario";
+
                 commentElement.innerHTML = `
                     <div class="flex items-center mb-2">
-                        <img src="${comment.User?.Profile?.profileImage || '../static/media/default-avatar.png'}" 
+                        <img src="${profileImage}" 
                              class="w-8 h-8 rounded-full">
-                        <span class="ml-2 text-yellow-400 font-semibold">${comment.User?.Profile?.stageName || "Usuario"}</span>
+                        <span class="ml-2 text-yellow-400 font-semibold">${userName}</span>
                     </div>
                     <p class="text-gray-300">${comment.content}</p>
+                    <p class="text-gray-500 text-xs mt-1">${new Date(comment.createdAt).toLocaleString()}</p>
                 `;
 
                 commentsContainer.appendChild(commentElement);
