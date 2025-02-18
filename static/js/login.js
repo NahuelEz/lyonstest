@@ -4,17 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("loginForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse) {
-      Swal.fire({
-        title: '¡Error!',
-        text: 'Por favor, verifica que no eres un robot.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      });
-      return;
-    }
-
     const emailInput = document.getElementById("loginEmail");
     const passwordInput = document.getElementById("loginPassword");
     const email = emailInput.value.trim();
@@ -26,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, recaptchaResponse }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
@@ -81,17 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse) {
-      Swal.fire({
-        title: '¡Error!',
-        text: 'Por favor, verifica que no eres un robot.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      });
-      return;
-    }
-
     const ageCheck = document.getElementById("ageCheck").checked;
     const termsCheck = document.getElementById("termsCheck").checked;
 
@@ -141,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
           password, 
           confirmPassword, 
           role,
-          recaptchaResponse,
           isAdult: ageCheck,
           acceptedTerms: termsCheck
         }),
@@ -189,7 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
     registerTab.classList.add('text-gray-300');
     loginForm.classList.remove('hidden');
     registerForm.classList.add('hidden');
-    grecaptcha.reset();
   });
 
   registerTab.addEventListener('click', () => {
@@ -199,7 +175,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loginTab.classList.add('text-gray-300');
     registerForm.classList.remove('hidden');
     loginForm.classList.add('hidden');
-    grecaptcha.reset();
   });
 });
 
