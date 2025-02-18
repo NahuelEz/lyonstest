@@ -34,7 +34,7 @@ class CommentController {
     addComment = async (req, res) => {
         try {
             const { id: publicationId } = req.params;
-            const { id: userId } = req.user; // `req.user` debería estar definido por el middleware de autenticación
+            const { id: userId } = req.user;
             const { content } = req.body;
 
             if (!content) {
@@ -47,8 +47,27 @@ class CommentController {
                 content,
             });
 
-            res.status(201).json({ success: true, body: newComment });
+            // Obtener el comentario con la información del usuario
+            const commentWithUser = await Comment.findOne({
+                where: { id: newComment.id },
+                include: [
+                    {
+                        model: User,
+                        attributes: ['id'],
+                        include: [
+                            {
+                                model: Profile,
+                                attributes: ['profileImage', 'stageName']
+                            }
+                        ]
+                    }
+                ]
+            });
+
+            console.log('New comment created:', JSON.stringify(commentWithUser, null, 2));
+            res.status(201).json({ success: true, body: commentWithUser });
         } catch (error) {
+            console.error('Error creating comment:', error);
             res.status(500).json({ success: false, message: error.message });
         }
     };
