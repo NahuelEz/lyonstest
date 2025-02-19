@@ -13,7 +13,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
+        if (!userResponse.ok) {
+            throw new Error('Error al obtener datos del usuario');
+        }
+
         const userData = await userResponse.json();
+        console.log('User data:', userData);
+
         if (!userData.success || userData.body.role !== 'model') {
             alert('Acceso no autorizado');
             window.location.href = '/';
@@ -23,105 +29,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Update token count
         document.getElementById('token-count').textContent = userData.body.tokens || 0;
 
-        // Fetch subscription statistics
-        const subscriptionsResponse = await fetch(`http://localhost:9001/api/subscriptions/stats`, {
+        // Fetch model statistics
+        const statsResponse = await fetch('http://localhost:9001/api/model/stats', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
-        const subscriptionsData = await subscriptionsResponse.json();
-        if (subscriptionsData.success) {
-            document.getElementById('active-subscribers').textContent = subscriptionsData.body.activeSubscribers || 0;
-            document.getElementById('subscription-income').textContent = subscriptionsData.body.subscriptionIncome || 0;
+        if (!statsResponse.ok) {
+            throw new Error('Error al obtener estadísticas');
         }
 
-        // Fetch recent subscribers
-        const recentSubscribersResponse = await fetch(`http://localhost:9001/api/subscriptions/recent`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const statsData = await statsResponse.json();
+        console.log('Stats data:', statsData);
 
-        const recentSubscribersData = await recentSubscribersResponse.json();
-        if (recentSubscribersData.success) {
-            const subscribersTable = document.getElementById('recent-subscribers');
-            subscribersTable.innerHTML = recentSubscribersData.body.map(sub => `
-                <tr class="border-t border-gray-800">
-                    <td class="p-4">
-                        <div class="flex items-center">
-                            <img src="${sub.subscriber?.profile?.profileImage || '../static/media/default-avatar.png'}" 
-                                 class="w-8 h-8 rounded-full mr-3">
-                            <span>${sub.subscriber?.profile?.stageName || 'Usuario'}</span>
-                        </div>
-                    </td>
-                    <td class="p-4">${new Date(sub.suscribedAt).toLocaleDateString()}</td>
-                    <td class="p-4">${sub.cost}</td>
-                    <td class="p-4">
-                        <span class="px-2 py-1 rounded-full text-xs ${
-                            sub.status === 'active' ? 'bg-green-500' : 'bg-red-500'
-                        }">${sub.status}</span>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // Fetch recent activities
-        const activitiesResponse = await fetch(`http://localhost:9001/api/activities/recent`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const activitiesData = await activitiesResponse.json();
-        if (activitiesData.success) {
-            const activitiesContainer = document.getElementById('recent-activities');
-            activitiesContainer.innerHTML = activitiesData.body.map(activity => `
-                <div class="flex items-center justify-between py-2">
-                    <div class="flex items-center">
-                        <div class="w-2 h-2 rounded-full ${
-                            activity.type === 'subscription' ? 'bg-green-500' :
-                            activity.type === 'unlock' ? 'bg-blue-500' :
-                            'bg-yellow-500'
-                        } mr-3"></div>
-                        <span>${activity.description}</span>
-                    </div>
-                    <span class="text-sm text-gray-400">${new Date(activity.createdAt).toLocaleString()}</span>
-                </div>
-            `).join('');
-        }
-
-        // Fetch top unlocked content
-        const topContentResponse = await fetch(`http://localhost:9001/api/content/top-unlocked`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const topContentData = await topContentResponse.json();
-        if (topContentData.success) {
-            const topContentContainer = document.getElementById('top-content');
-            topContentContainer.innerHTML = topContentData.body.map(content => `
-                <div class="bg-gray-800 rounded-lg overflow-hidden">
-                    <img src="${content.mediaItems?.[0]?.url || '../static/media/default-placeholder.png'}" 
-                         class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h3 class="font-semibold mb-2">${content.title}</h3>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-400">Desbloqueos:</span>
-                            <span>${content.unlockCount}</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-400">Tokens generados:</span>
-                            <span>${content.tokensEarned}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        if (statsData.success) {
+            // Update statistics
+            document.getElementById('active-subscribers').textContent = statsData.body.activeSubscribers || 0;
+            document.getElementById('total-tokens').textContent = statsData.body.subscriptionEarnings || 0;
+            document.getElementById('unlocked-content').textContent = statsData.body.unlockedContentCount || 0;
         }
 
     } catch (error) {
         console.error('Error loading dashboard data:', error);
-        alert('Error al cargar los datos del dashboard');
+        alert('Error al cargar los datos del dashboard: ' + error.message);
     }
 });

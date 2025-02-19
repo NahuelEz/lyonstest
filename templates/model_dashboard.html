@@ -7,13 +7,16 @@
   <link rel="icon" href="/static/media/lyonsvip.ico" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/dashboard-styles.css">
+  <script src="/static/js/axiosConfig.js"></script>
 </head>
 <body class="bg-[#1a1a1a] text-white">
 
 <!-- Navbar -->
 <header class="sticky top-0 z-50 bg-[#1a1a1a] border-b border-gray-800">
   <div class="container mx-auto flex justify-between items-center p-4">
-    <img src="/static/media/LYONSVIP negro.png" alt="LYONSVIP Logo" class="h-16">
+    <a href="/">
+      <img src="/static/media/LYONSVIP negro.png" alt="LYONSVIP Logo" class="h-16">
+    </a>
     <nav class="flex space-x-6">
       <a href="/" class="text-gray-300 hover:text-yellow-400 transition-colors">INICIO</a>
       <a href="/profile.html" class="text-gray-300 hover:text-yellow-400 transition-colors">MI PERFIL</a>
