@@ -19,7 +19,11 @@ class UserService {
         const validate = await user.validatePassword(password);
         if (!validate) throw new Error("Incorrect credentials");
 
-        const payload = { id: user.id };
+        const payload = { 
+            id: user.id,
+            role: user.role,
+            email: user.email
+        };
         return generateToken(payload);
     };
 

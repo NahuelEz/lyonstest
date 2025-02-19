@@ -4,8 +4,8 @@ import bcrypt from "bcrypt";
 
 class User extends Model {
     validatePassword = async (plainTextPassword) => {
-        const validate = await bcrypt.hash(plainTextPassword, this.salt);
-        return validate === this.password;
+        // Compare the plain text password with the stored hash
+        return await bcrypt.compare(plainTextPassword, this.password);
     };
 }
 
@@ -85,10 +85,7 @@ User.init(
 User.beforeCreate(async (user) => {
     const salt = await bcrypt.genSalt();
     user.salt = salt;
-
-    const hashPassword = await bcrypt.hash(user.password, salt);
-    user.password = hashPassword;
+    user.password = await bcrypt.hash(user.password, salt);
 });
 
 export default User;
-
