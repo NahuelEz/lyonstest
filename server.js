@@ -49,10 +49,12 @@ app.use(cookieParser());
 
 // Static files
 app.use("/static", express.static(path.join(process.cwd(), "static")));
-app.use(express.static("./templates"));
+
+// Serve templates directory
+const templatesPath = path.join(process.cwd(), "templates");
+app.use(express.static(templatesPath));
 
 // Template routes
-const templatesPath = path.join(process.cwd(), "templates");
 app.get("/", (req, res) => res.sendFile(path.join(templatesPath, "index.html")));
 app.get("/tokens", (req, res) => res.sendFile(path.join(templatesPath, "tokens.html")));
 app.get("/login", (req, res) => res.sendFile(path.join(templatesPath, "login.html")));
@@ -60,7 +62,10 @@ app.get("/dashboard", (req, res) => res.sendFile(path.join(templatesPath, "dashb
 app.get("/publish", (req, res) => res.sendFile(path.join(templatesPath, "cargar.html")));
 app.get("/coming", (req, res) => res.sendFile(path.join(templatesPath, "coming.html")));
 app.get("/profile", (req, res) => res.sendFile(path.join(templatesPath, "profile.html")));
-app.get("/model-dashboard", (req, res) => res.sendFile(path.join(templatesPath, "model_dashboard.html")));
+app.get("/model-dashboard", (req, res) => {
+    console.log('Serving model dashboard from:', path.join(templatesPath, "model_dashboard.html"));
+    res.sendFile(path.join(templatesPath, "model_dashboard.html"));
+});
 
 // API routes with authentication
 app.use("/api", validateUser, router);
